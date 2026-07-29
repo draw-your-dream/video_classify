@@ -2,7 +2,7 @@
 # 下载机制验证子集(skus 还原度 bad 464 + skus good 455)到 data/corpus_videos/
 # 来源 s3://trash-in-picaa/Datasets/tutu-video-eval/<款>/<file>(默认 profile)
 set -e
-ROOT=/home/lenovo/tutu-video-eval
+ROOT="${TUTU_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 SRC=s3://trash-in-picaa/Datasets/tutu-video-eval
 DST=$ROOT/data/corpus_videos
 MAN=$ROOT/data/prod500/mech_subset.tsv

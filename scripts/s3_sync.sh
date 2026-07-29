@@ -2,14 +2,17 @@
 # 同步 ~/tutu-video-eval 产出到 s3://sowii-reward-model/tutu/video_reward/
 # 用法: s3_sync.sh docs|data|corpus|scripts|results <dir>|models <dir>|videos|hfcache|status
 set -e
-ROOT=/home/lenovo/tutu-video-eval
+ROOT="${TUTU_ROOT:-$(cd "$(dirname "$0")/.." && pwd)}"
 DST=s3://sowii-reward-model/tutu/video_reward
 P="--profile reward-model-s3"
 
 case "${1:-status}" in
   docs)
-    aws s3 cp $ROOT/S3_LAYOUT.md $DST/README.md $P
-    for f in data/prod500/FAILURE_CATALOG.md data/prod500/FACTOR_PREREG.md RETRAIN.md ITER_LOG.md; do
+    for f in S3_LAYOUT.md docs/S3_LAYOUT.md; do
+      [ -f $ROOT/$f ] && aws s3 cp $ROOT/$f $DST/README.md $P && break
+    done
+    for f in data/prod500/FAILURE_CATALOG.md data/prod500/FACTOR_PREREG.md RETRAIN.md ITER_LOG.md \
+             docs/FAILURE_CATALOG.md docs/FACTOR_PREREG.md docs/RETRAIN.md docs/ITER_LOG.md; do
       [ -f $ROOT/$f ] && aws s3 cp $ROOT/$f $DST/docs/$(basename $f) $P
     done ;;
   data)

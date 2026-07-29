@@ -16,12 +16,46 @@ AI 生成毛毡蘑菇 IP 短视频(~5s)的质检漏斗:**bad 近零漏检前提�
 - `c_first_last`:GroundingDINO 裁角色 → 首末帧 SigLIP2 嵌入余弦(自参照设计,跨域不携带绝对尺度)。
 - 门构造:两轴各自域内分位,OR 取最大;阈值压在最难 bad 的分位上(全召回由构造保证,泛化看 LOO)。
 
-复现:
+## 复现 26.4%(不需要 S3、不需要 GPU)
 
 ```bash
-python scripts/eval_or_gate.py            # 基线 26.4%
+git clone https://github.com/pkucaoyuan/video_classify && cd video_classify
+pip install pandas numpy                  # 仅有的依赖
+python scripts/eval_or_gate.py            # 基线 26.4%(t=0.468, LOO 漏 1/27)
 python scripts/eval_or_gate.py --table    # 逐 bad 分位表(看门的盲区)
 ```
+
+复现所需的两张数据表已在仓库内:`data/prod500/prod500.csv`(GT 与线上评分,已脱敏)
+和 `data/prod500/prod_crop.csv`(裁剪特征含 c_first_last)。已验证全新 clone 直接出 26.4%。
+
+## 大文件走 S3(视频/模型/语料)
+
+桶 `s3://sowii-reward-model/tutu/video_reward/`(us-east-1),访问 key 不入库、向维护者索取,配置:
+
+```bash
+aws configure --profile reward-model-s3   # 填 access key / secret
+aws s3 ls s3://sowii-reward-model/tutu/video_reward/ --profile reward-model-s3
+```
+
+| S3 路径 | 内容 | 用途 |
+|---|---|---|
+| `data/prod500/videos.tar` | 500 条视频(386MB) | 跑 `extract_f1f5.py` 全流程 |
+| `hf_cache/` | grounding-dino-base + siglip2-base 权重镜像 | 免翻墙拉底模 |
+| `data/corpus/` | 语料 4473 标签与划分 | 机制验证 |
+| `results/` `models/` | 每轮实验产出 / 训练权重 | 只增不改 |
+
+全流程复现(需 GPU,~12GB 显存):
+
+```bash
+aws s3 cp s3://sowii-reward-model/tutu/video_reward/data/prod500/videos.tar . --profile reward-model-s3
+tar -xf videos.tar -C data/prod500/       # 解出 data/prod500/videos/*.mp4
+pip install torch transformers opencv-python-headless pillow
+python scripts/extract_f1f5.py            # 产出 factors_f1f5.jsonl(底模默认从 HF 拉,或先从 S3 hf_cache/ 同步到 .hf_cache)
+python scripts/eval_or_gate.py --sweep    # 新因子并门评估
+```
+
+语料机制验证子集(464 还原度 bad + 455 good)清单在 `data/prod500/mech_subset.tsv`,
+视频在语料桶 `s3://trash-in-picaa/Datasets/tutu-video-eval/`(需该桶权限),`scripts/dl_mech_subset.sh` 下载。
 
 ## 为什么不用语料 4473 训练(一句话版)
 
