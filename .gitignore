@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.hf_cache/
+videos/
+*.mp4
+*.tar
+factors_*.jsonl
