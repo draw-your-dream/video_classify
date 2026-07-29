@@ -28,6 +28,13 @@ python scripts/eval_or_gate.py --table    # 逐 bad 分位表(看门的盲区)
 复现所需的两张数据表已在仓库内:`data/prod500/prod500.csv`(GT 与线上评分,已脱敏)
 和 `data/prod500/prod_crop.csv`(裁剪特征含 c_first_last)。已验证全新 clone 直接出 26.4%。
 
+**溯源完整性(2026-07-29 验证):**c_first_last 由 `scripts/crop_feat_original.py` 生成
+(GroundingDINO 三连 prompt 检测 → 方形裁剪 1.25 倍 → SigLIP2-so400m-384 pooler 嵌入 → 首末帧余弦)。
+在 H100 原机原环境复跑 500 条,与仓库内 `prod_crop.csv` 逐条完全一致(pearson 1.0000,最大差 0.0000)。
+整条链 视频(S3)→ 提取脚本 → 特征表 → 评估门 → 26.4% 每一环均可再生。
+注意:换用 siglip2-base-224/投影特征/矩形裁剪的变体实现与该列相关仅 0.28——
+**此特征对实现细节敏感,复现必须用 crop_feat_original.py 的确切配置。**
+
 ## 大文件走 S3(视频/模型/语料)
 
 桶 `s3://sowii-reward-model/tutu/video_reward/`(us-east-1),访问 key 不入库、向维护者索取,配置:
