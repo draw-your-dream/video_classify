@@ -196,3 +196,24 @@ Rebuilt 15 experts+stack+meta with sft = Qwen3.5-9B SFT (vs old Qwen2.5-VL). Bas
 => consistent with all prior results: stronger single discriminator (Qwen3.5-9B solo AUC 0.675)
    does NOT lift the ensemble. NOT promoted; kept the current artifacts_v3. predict.py single-video
    verified working with --artifacts.
+
+## 2026-07-30 | 单类 patch 异常检测机制验证(语料 919 子集,H100)
+
+假设:身份属性不可变/状态属性自由变 -> good 定义"正常轨道",patch 级异常检测(AnomalyDINO 范式)
+可分开还原度 bad/good。预注册 FACTOR_PREREG.md P1(v2:款分层划分 + s_hist 逻辑分支 + 裁剪核验)。
+
+流水:919 条(还原度 bad 464 + good 455)预签名 URL 直拉 H100(密钥不上机)->
+GroundingDINO 原版配置裁剪 -> DINOv2-base 37x37 patch 特征(2.4s/vid,全 919 零错误)->
+good 款分层 299 建库 / 156 评估 -> 1-NN 余弦 + k-means64 直方图,三口径聚合。
+
+结果:**未过晋级关(AUC>=0.70)**。最好 s_hist_mean=0.568 / s_top5_fg_mean=0.543;
+剔跑偏裁剪敏感性 0.564-0.571 稳健;分款分库对照池化 0.574,款级收紧无效。
+
+机理:bank_good P50=0.19 vs eval_good P50=0.42 —— 开放内容域 novelty 噪声地板淹没缺陷信号,
+MVTec 封闭场景前提不成立。**参照必须收紧到本视频 -> i2v 首帧原图 = 头号数据请求。**
+副产品:P2 角色在场性轴(1-cos_centroid)AUC 0.584,prod 可直接复算,待预注册评估。
+
+工件:scripts/{extract_patch_feat,patch_bank_eval,patch_bank_eval_style,verify_crops2}.py;
+data/prod500/{patch_bank_scores,patch_bank_scores_style,verify_crops2}.csv;
+crop_montage.jpg / flag_montage.jpg(人工复核通过,跑偏尾部 ~20 条)。
+v1 文本塔核验(transformers 5.x 下损坏)作废,见 PREREG 附注。
