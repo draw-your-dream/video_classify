@@ -217,3 +217,11 @@ MVTec 封闭场景前提不成立。**参照必须收紧到本视频 -> i2v 首�
 data/prod500/{patch_bank_scores,patch_bank_scores_style,verify_crops2}.csv;
 crop_montage.jpg / flag_montage.jpg(人工复核通过,跑偏尾部 ~20 条)。
 v1 文本塔核验(transformers 5.x 下损坏)作废,见 PREREG 附注。
+
+## 2026-07-31 第0步逐簇AUC分解:0达标簇,bank范式关闭
+- 旧盒GPU被占无法重启;新盒H100全链路重跑,与原机千分位复现(0.567/0.575,verify2逐字一致)。
+- 逐簇分解(64 k-means簇=免费部件分割,预注册判读门 AUC>=0.65+覆盖+语义):
+  外观轴 P50=0.502 P90=0.552 满覆盖max=0.587;占比轴最偏0.613/0.380 -> 0达标。
+- 结论:novelty地板在簇内部,三级参照系收紧(全身->款->部位)全失败;部件线弃bank,
+  转 线C比例轨迹(测量)/线B关键点计数(标注)/线A合成缺陷监督;i2v首帧原图仍头号数据请求。
+- 产物:cluster_auc.csv、cluster_montage_parts.jpg(待人工过目簇语义)、cluster_auc_decomp.py。
