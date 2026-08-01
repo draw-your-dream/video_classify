@@ -1,0 +1,158 @@
+{
+ "case01": {
+  "rel": "基础款/6783.mp4",
+  "tag": "good"
+ },
+ "case02": {
+  "rel": "基础款/7146.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case03": {
+  "rel": "基础款/6147.mp4",
+  "tag": "bad_flagged"
+ },
+ "case04": {
+  "rel": "基础款/6686.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case05": {
+  "rel": "基础款/6608.mp4",
+  "tag": "bad_flagged"
+ },
+ "case06": {
+  "rel": "基础款/6926.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case07": {
+  "rel": "基础款/5625.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case08": {
+  "rel": "基础款/6715.mp4",
+  "tag": "good"
+ },
+ "case09": {
+  "rel": "基础款/6949.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case10": {
+  "rel": "潜水款/7153.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case11": {
+  "rel": "基础款/7271.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case12": {
+  "rel": "甜品款/5741.mp4",
+  "tag": "bad_flagged"
+ },
+ "case13": {
+  "rel": "基础款/7095.mp4",
+  "tag": "good"
+ },
+ "case14": {
+  "rel": "基础款/6847.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case15": {
+  "rel": "基础款/6641.mp4",
+  "tag": "bad_flagged"
+ },
+ "case16": {
+  "rel": "基础款/5763.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case17": {
+  "rel": "基础款/6617.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case18": {
+  "rel": "冰晶款/6654.mp4",
+  "tag": "bad_flagged"
+ },
+ "case19": {
+  "rel": "基础款/7159.mp4",
+  "tag": "good"
+ },
+ "case20": {
+  "rel": "基础款/6562.mp4",
+  "tag": "good"
+ },
+ "case21": {
+  "rel": "基础款/6518.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case22": {
+  "rel": "基础款/7057.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case23": {
+  "rel": "花花款/7405.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case24": {
+  "rel": "基础款/6480.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case25": {
+  "rel": "星月款/6711.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case26": {
+  "rel": "基础款/6496.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case27": {
+  "rel": "基础款/6655.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case28": {
+  "rel": "基础款/6868.mp4",
+  "tag": "bad_flagged"
+ },
+ "case29": {
+  "rel": "基础款/6328.mp4",
+  "tag": "good"
+ },
+ "case30": {
+  "rel": "基础款/6570.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case31": {
+  "rel": "基础款/7009.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case32": {
+  "rel": "冰晶款/6131.mp4",
+  "tag": "bad_unflagged"
+ },
+ "case33": {
+  "rel": "冰晶款/7093.mp4",
+  "tag": "good"
+ },
+ "case34": {
+  "rel": "甜品款/6739.mp4",
+  "tag": "good"
+ },
+ "case35": {
+  "rel": "基础款/7189.mp4",
+  "tag": "bad_flagged"
+ },
+ "case36": {
+  "rel": "基础款/6791.mp4",
+  "tag": "good"
+ },
+ "case37": {
+  "rel": "甜品款/5966.mp4",
+  "tag": "bad_flagged"
+ },
+ "case38": {
+  "rel": "基础款/6996.mp4",
+  "tag": "good"
+ },
+ "case39": {
+  "rel": "潜水款/7460.mp4",
+  "tag": "bad_unflagged"
+ }
+}

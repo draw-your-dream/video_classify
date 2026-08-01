@@ -237,3 +237,11 @@ v1 文本塔核验(transformers 5.x 下损坏)作废,见 PREREG 附注。
   i2v首帧原图(头号数据请求)/合成缺陷监督(线A,唯一未测)/缺陷子类型标注(裁决标签异质假设)。
 - 产物:axis_rgc_scores.csv、axis_rgc_prod.csv、vlm_v_axis.jsonl、ref_embeds、
   extract_sam3/prep_ref_embeds/axis_rgc_eval/axis_rgc_prod/vlm_v_axis.py。
+
+## 2026-08-01(晚)V2/R-self/线A 三连判 + 标签异质假设成型
+- V2(Qwen3-VL-32B):排序 0.571 关闭;登记发现=旗标零误报(bad 8/56, good 0/57)。
+- R-self(c_first_last 语料版):0.41-0.48 反向——自漂移量的是动作幅度;语料/产线缺陷构成不同再证。
+- 线A v0(合成缺陷监督):真 bad 0.518;仪器自检 held-out 合成 0.876(黑点0.98/尾0.996/拉长0.97)。
+- 三方互证 => 主解释:语料「还原度 bad」静帧可见缺陷占比 ~15%,0.57=1-口径天花板。
+- 裁决:39 例盲审页已交用户(旗标bad8+未旗标bad23+good10,乱序匿名)。
+- 资产:synth_defects.py(7族)、synth_head_v0.pt、audit_page、axis_rself.csv、vlm_v2.jsonl。
