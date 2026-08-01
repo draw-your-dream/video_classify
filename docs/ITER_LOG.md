@@ -225,3 +225,15 @@ v1 文本塔核验(transformers 5.x 下损坏)作废,见 PREREG 附注。
 - 结论:novelty地板在簇内部,三级参照系收紧(全身->款->部位)全失败;部件线弃bank,
   转 线C比例轨迹(测量)/线B关键点计数(标注)/线A合成缺陷监督;i2v首帧原图仍头号数据请求。
 - 产物:cluster_auc.csv、cluster_montage_parts.jpg(待人工过目簇语义)、cluster_auc_decomp.py。
+
+## 2026-08-01 P3 战役:SAM3底座+参考图三轴+VLM判官,一晚三范式全判
+- 资源落地:tutu-renders-2026-04(152张:基础款kf 98+六款各9,含SAM3掩码);SAM3权重
+  sha256对官方核验后取自公开镜像(盒上零凭证);前人图片侧IP-eval管线消化(抠像+LPIPS/DreamSim/so400m)。
+- SAM3提取:919语料+500产线,1.2s/条,抠像蒙太奇人工核验通过(道具正确排除,实例数稳定=1)。
+- R轴(DreamSim/so400m vs 参照池):语料最好r_ds_mean=0.568;G轴几何0.53/漂移0.47;C轴计数0.46-0.47。
+- prod500探索性集成:基线26.4%精确复现;任一新轴并入OR门均降低放行(13.7-21.1%),无增量。
+- V轴(Qwen3-VL-8B参考图对照问答):AUC=0.500退化,261条全9分,关闭。
+- 结论:款级参照+外观度量+语义判官全线穷尽,0.57天花板横跨五方法族;存活方向=
+  i2v首帧原图(头号数据请求)/合成缺陷监督(线A,唯一未测)/缺陷子类型标注(裁决标签异质假设)。
+- 产物:axis_rgc_scores.csv、axis_rgc_prod.csv、vlm_v_axis.jsonl、ref_embeds、
+  extract_sam3/prep_ref_embeds/axis_rgc_eval/axis_rgc_prod/vlm_v_axis.py。
