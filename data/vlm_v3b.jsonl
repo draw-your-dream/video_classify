@@ -1,0 +1,120 @@
+{"rel": "基础款/6605.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体下方出现不规则分离的毛绒块，疑似底部结构异常，但未见明显五官崩坏或多余肢体，可能为正常姿态变化或轻微抠像瑕疵\"}"}
+{"rel": "基础款/6686.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色面部出现异常绿色四叶草装饰，且后期表情五官崩坏、身体结构扭曲\"}"}
+{"rel": "基础款/6351.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 70, 30, 30], \"video_defect_prob\": 50, \"main_issue\": \"角色面部表情异常，出现愤怒皱眉，且部分帧存在肢体不完整或缺失问题\"}"}
+{"rel": "基础款/6480.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "基础款/7097.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色左侧出现多余肢体结构，且部分帧脸部有异常裂痕\"}"}
+{"rel": "基础款/5763.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色在后两帧出现面部五官扭曲、嘴巴错位及肢体异常，存在明显形象崩坏\"}"}
+{"rel": "花花款/7405.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现嘴巴错位和表情崩坏，身体比例轻微异常\"}"}
+{"rel": "基础款/7081.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧出现明显表情崩坏，眉毛和嘴巴变形，疑似面部结构错位\"}"}
+{"rel": "甜品款/5966.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧出现明显面部五官融化与错位，疑似生成异常\"}"}
+{"rel": "基础款/6031.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"角色面部表情和嘴部细节在部分帧中出现轻微变形，疑似嘴巴错位或融化，且透明伞结构与角色头部融合异常，存在轻微崩坏迹象。\"}"}
+{"rel": "冰晶款/6654.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 95, 95, 95], \"video_defect_prob\": 95, \"main_issue\": \"角色主体被替换为派对帽，完全丢失蘑菇TUTU的本体形象\"}"}
+{"rel": "基础款/7057.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 0, 70], \"video_defect_prob\": 30, \"main_issue\": \"最后一帧右脚出现异常黑色污斑，疑似材质错误或渲染缺陷\"}"}
+{"rel": "基础款/6926.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色面部五官出现扭曲和崩坏，尤其是第三、四帧中眼睛和嘴巴变形，且第四帧出现多余肢体和身体结构异常\"}"}
+{"rel": "基础款/6246.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现撕裂、缺失和多余肢体，表情异常，存在明显崩坏\"}"}
+{"rel": "基础款/7099.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧存在明显身体比例拉长和肢体错位，疑似崩坏\"}"}
+{"rel": "基础款/6570.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色嘴巴出现异常张开且无闭合状态，眼睛颜色与参考图不符，存在表情崩坏迹象\"}"}
+{"rel": "基础款/6210.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 95], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现嘴巴撕裂、肢体异常及身体结构崩坏\"}"}
+{"rel": "星月款/6711.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色面部表情异常，眼睛变窄呈怒视状，嘴巴区域出现不自然的裂口，疑似五官崩坏\"}"}
+{"rel": "甜品款/5913.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现断裂和多余肢体，表情五官变形，存在明显崩坏\"}"}
+{"rel": "基础款/7042.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95, 30], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现肢体缺失、表情崩坏及身体结构异常\"}"}
+{"rel": "潜水款/7335.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有正常变化，无明显形象缺陷\"}"}
+{"rel": "基础款/6949.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和表情有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "基础款/6496.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 70, 30], \"video_defect_prob\": 70, \"main_issue\": \"角色面部出现不自然的白色裂口，疑似嘴巴或面部结构崩坏，且部分帧存在肢体变形\"}"}
+{"rel": "基础款/6406.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体比例和轮廓基本正常，但蜘蛛侠服装细节在多帧中出现轻微错位或边缘不齐，疑似抠像或生成时的纹理对齐问题，未见五官崩坏或多余肢体等严重缺陷\"}"}
+{"rel": "基础款/6925.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第三帧角色右臂异常抬高且手部形态模糊，疑似多余肢体或肢体变形\"}"}
+{"rel": "冰晶款/6131.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态变化正常，无明显形象缺陷\"}"}
+{"rel": "基础款/6518.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"角色身体出现不自然的断裂和缺失，表情也出现异常的皱眉，疑似生成错误\"}"}
+{"rel": "潜水款/7460.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"最后一帧角色腿部出现不规则破损和缺失，疑似生成错误\"}"}
+{"rel": "基础款/7146.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 30], \"video_defect_prob\": 40, \"main_issue\": \"第三帧角色表情异常，眼睛下垂且双手姿势不自然，疑似面部结构轻微崩坏\"}"}
+{"rel": "基础款/7271.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色整体形象基本保持一致，无明显崩坏，部分帧存在轻微姿态或表情变化，属于正常AI生成波动\"}"}
+{"rel": "\u6f5c\u6c34\u6b3e/6738.mp4", "group": "bad", "error": "no_frames"}
+{"rel": "甜品款/6733.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "\u6f5c\u6c34\u6b3e/7004.mp4", "group": "bad", "error": "no_frames"}
+{"rel": "基础款/6847.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧出现身体比例异常和肢体模糊，疑似崩坏\"}"}
+{"rel": "基础款/6147.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 30, 95, 30], \"video_defect_prob\": 70, \"main_issue\": \"第4帧角色身体严重崩坏，出现大面积像素化和结构缺失\"}"}
+{"rel": "基础款/7030.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"第4、5帧出现身体比例异常和五官扭曲，第5帧表情严重崩坏且肢体变形\"}"}
+{"rel": "基础款/5867.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体轮廓在侧面视角下出现轻微不规则变形，但未见明显五官崩坏或多余肢体，属于正常姿态变化范围\"}"}
+{"rel": "\u6f5c\u6c34\u6b3e/7414.mp4", "group": "bad", "error": "no_frames"}
+{"rel": "基础款/7415.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色面部表情和头部装饰有轻微变化，但无明显形象缺陷\"}"}
+{"rel": "基础款/6641.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"角色面部出现不自然的裂口和表情崩坏，疑似五官结构错位\"}"}
+{"rel": "森林款/6706.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体部分被不完整抠像导致边缘断裂，但无本体结构崩坏或多余肢体等形象缺陷\"}"}
+{"rel": "潜水款/7183.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"角色面部表情从正常变为愤怒，且部分帧出现不自然的面部变形和嘴部缺失，疑似表情崩坏\"}"}
+{"rel": "基础款/6608.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"部分帧中角色身体出现不规则撕裂和缺失，疑似渲染瑕疵\"}"}
+{"rel": "基础款/6655.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"部分帧出现面部污斑和五官模糊，疑似生成缺陷\"}"}
+{"rel": "\u51b0\u6676\u6b3e/6772.mp4", "group": "bad", "error": "no_frames"}
+{"rel": "基础款/5625.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体轮廓出现不自然的缺失和变形，疑似抠像或生成过程中的边缘断裂，但未见五官崩坏或多余肢体等严重缺陷\"}"}
+{"rel": "基础款/7189.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现明显撕裂和缺失，表情也发生扭曲，属于形象崩坏\"}"}
+{"rel": "基础款/5930.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有变化，但无明显形象缺陷，属于正常动画变化\"}"}
+{"rel": "基础款/6758.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"角色身体下半部分出现不规则缺失和变形，疑似肢体结构崩坏\"}"}
+{"rel": "基础款/6617.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"角色面部表情异常，出现不自然的皱眉和嘴部变形，且部分帧中身体比例略显拉伸，存在明显形象崩坏迹象\"}"}
+{"rel": "基础款/5704.mp4", "group": "bad", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "森林款/7444.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 95, 70, 30], \"video_defect_prob\": 60, \"main_issue\": \"第3帧出现严重五官崩坏和身体结构缺失，第4帧存在明显身体比例异常\"}"}
+{"rel": "基础款/6354.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧角色腿部出现异常结构，疑似多余肢体或断裂，其他帧基本正常\"}"}
+{"rel": "基础款/6868.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 95, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体部分出现严重像素化和结构崩坏，导致面部和肢体细节缺失\"}"}
+{"rel": "基础款/7009.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"角色眼睛出现发光和嘴部变形，疑似五官融化或异常高光，存在明显形象缺陷\"}"}
+{"rel": "潜水款/7153.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧背部出现异常结构，疑似多余肢体或轮廓错位，其他帧基本正常\"}"}
+{"rel": "基础款/6370.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧出现明显身体比例压扁和五官模糊，疑似崩坏\"}"}
+{"rel": "冰晶款/5924.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧出现身体下半部分明显缺失和变形，疑似肢体断裂或生成错误\"}"}
+{"rel": "甜品款/5741.mp4", "group": "bad", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 30, 95], \"video_defect_prob\": 70, \"main_issue\": \"第4帧角色身体严重缺失，呈现大面积像素断裂，属于明显崩坏\"}"}
+{"rel": "基础款/5753.mp4", "group": "bad", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 30], \"video_defect_prob\": 40, \"main_issue\": \"第三帧角色表情扭曲，嘴巴区域出现不自然的裂口，疑似崩坏\"}"}
+{"rel": "甜品款/5631.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现断裂和缺失，表情五官变形，存在明显崩坏\"}"}
+{"rel": "潜水款/6838.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情和姿态有轻微变化，但无明显形象缺陷\"}"}
+{"rel": "星月款/7206.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第4帧蘑菇帽上出现异常透明水滴，疑似材质错误或生成瑕疵\"}"}
+{"rel": "基础款/7360.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95, 30], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现手脚异常和身体结构崩坏，如第三、四帧出现多余肢体和身体断裂\"}"}
+{"rel": "\u6f5c\u6c34\u6b3e/6226.mp4", "group": "eval_good", "error": "no_frames"}
+{"rel": "花花款/7063.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"第4帧出现蝴蝶装饰部分融化变形，疑似材质崩坏\"}"}
+{"rel": "基础款/7558.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧存在明显缺陷，角色身体比例异常拉长且面部五官模糊变形，疑似崩坏\"}"}
+{"rel": "基础款/6873.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和视角变化正常，无明显形象缺陷\"}"}
+{"rel": "冰晶款/6722.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现异常拉伸和多余肢体，部分帧出现严重崩坏\"}"}
+{"rel": "基础款/6876.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第三帧角色身体比例异常拉长且手臂结构模糊，疑似肢体缺失或变形\"}"}
+{"rel": "基础款/7020.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"嘴巴出现撕裂扭曲且表情异常，身体比例轻微变形\"}"}
+{"rel": "冰晶款/6945.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色整体形象基本保持一致，部分帧存在轻微模糊或边缘不清晰，但无明显结构或五官崩坏，属于正常AI生成波动\"}"}
+{"rel": "基础款/7230.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现多余肢体和比例严重变形，面部五官模糊或缺失\"}"}
+{"rel": "基础款/5714.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体部分出现不自然的弯曲和拉伸，疑似肢体结构异常，但未出现明显崩坏或多余结构\"}"}
+{"rel": "基础款/6175.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和表情有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "基础款/6274.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和视角变化正常，无明显形象缺陷\"}"}
+{"rel": "\u51b0\u6676\u6b3e/7217.mp4", "group": "eval_good", "error": "no_frames"}
+{"rel": "甜品款/7078.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"角色脸部出现不自然的裂口和表情扭曲，疑似嘴巴区域崩坏\"}"}
+{"rel": "冰晶款/6920.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 70], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现面部五官模糊、身体轮廓不完整等轻微崩坏，疑似AI生成时细节丢失\"}"}
+{"rel": "基础款/6737.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色面部表情和姿态有轻微变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "花花款/7219.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"部分帧中角色身体出现不自然的拉伸和变形，疑似肢体结构异常\"}"}
+{"rel": "基础款/6989.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 30], \"video_defect_prob\": 40, \"main_issue\": \"第三帧角色嘴巴出现明显撕裂变形，疑似崩坏\"}"}
+{"rel": "基础款/6186.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧出现明显肢体变形和身体比例异常\"}"}
+{"rel": "基础款/6747.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"蘑菇帽上出现异常水珠，身体比例轻微变形，疑似AI生成伪影\"}"}
+{"rel": "基础款/6794.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体在部分帧中出现轻微分离或断层，但未见明显五官崩坏或多余肢体，属于边缘性抠像或渲染问题\"}"}
+{"rel": "基础款/6116.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 30], \"video_defect_prob\": 40, \"main_issue\": \"第3帧存在明显的身体结构缺失和肢体断裂，疑似崩坏\"}"}
+{"rel": "冰晶款/6796.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 0], \"video_defect_prob\": 20, \"main_issue\": \"角色姿态和表情有正常变化，无明显形象缺陷\"}"}
+{"rel": "冰晶款/6143.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色面部表情出现明显扭曲，嘴巴张开变形，且部分帧中脸部轮廓和五官有融化感，不符合参考图的毛毡质感和结构\"}"}
+{"rel": "基础款/7202.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和表情有变化，但无明显形象缺陷，整体符合参考图特征\"}"}
+{"rel": "星月款/7529.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色腿部在部分帧中出现分离或不完整，但整体结构未崩坏，属于抠像或姿态变化导致的正常波动\"}"}
+{"rel": "花花款/5975.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色头部出现异常裂口和缺失，身体比例变形，存在明显崩坏\"}"}
+{"rel": "基础款/6817.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色姿态和视角变化正常，无明显形象缺陷\"}"}
+{"rel": "星月款/6807.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"部分帧出现身体比例异常和肢体缺失，疑似崩坏\"}"}
+{"rel": "基础款/7296.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色表情变化正常，无明显形象缺陷\"}"}
+{"rel": "冰晶款/6457.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"部分帧出现面部五官模糊、身体比例轻微变形及多余肢体迹象\"}"}
+{"rel": "森林款/6824.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色头部和身体出现不规则撕裂与缺失，导致轮廓变形，疑似生成错误\"}"}
+{"rel": "基础款/6157.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"最后一帧角色身体出现明显断裂和缺失，疑似肢体崩坏\"}"}
+{"rel": "冰晶款/7343.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30, 0], \"video_defect_prob\": 30, \"main_issue\": \"第三帧角色嘴巴出现异常裂口，疑似崩坏，其余帧基本正常\"}"}
+{"rel": "\u6f5c\u6c34\u6b3e/6916.mp4", "group": "eval_good", "error": "no_frames"}
+{"rel": "星月款/7604.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体部分出现异常截断和肢体缺失，疑似生成不完整\"}"}
+{"rel": "基础款/6897.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色身体部分出现轻微分离或断裂，但未见明显五官崩坏或多余肢体，可能为正常姿态变化或抠像边缘瑕疵\"}"}
+{"rel": "基础款/7085.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现断裂和缺失，疑似肢体错位或崩坏\"}"}
+{"rel": "基础款/7000.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"第4帧出现严重身体结构崩坏，面部五官错位且身体比例异常拉伸\"}"}
+{"rel": "基础款/6854.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色身体被不自然地分割成上下两部分，出现明显断裂，属于结构崩坏\"}"}
+{"rel": "潜水款/6938.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色整体形象基本保持一致，部分帧存在轻微模糊或细节不清晰，但无明显结构或五官崩坏\"}"}
+{"rel": "基础款/6891.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 70], \"video_defect_prob\": 60, \"main_issue\": \"部分帧出现肢体变形和面部细节模糊，疑似身体比例异常与五官融化\"}"}
+{"rel": "基础款/6911.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"第4帧出现异常小红点嘴，第5帧面部五官严重变形且身体比例扭曲\"}"}
+{"rel": "基础款/6788.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 70, 70, 30], \"video_defect_prob\": 70, \"main_issue\": \"角色下半身出现断裂和缺失，疑似肢体崩坏\"}"}
+{"rel": "森林款/5691.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 70], \"video_defect_prob\": 50, \"main_issue\": \"角色头部装饰物在部分帧中出现破损和缺失，且面部表情出现异常闭眼，疑似生成不完整\"}"}
+{"rel": "花花款/6842.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 0], \"video_defect_prob\": 30, \"main_issue\": \"第三帧角色脸部表情异常，出现不自然的皱眉，疑似五官变形\"}"}
+{"rel": "花花款/6478.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 50, \"main_issue\": \"第三帧角色身体比例异常，腿部明显拉长且结构模糊，疑似崩坏\"}"}
+{"rel": "基础款/5988.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"第4帧角色面部表情异常，眼睛闭合且嘴部变形，疑似五官融化\"}"}
+{"rel": "基础款/7162.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"第4帧出现明显肢体错位和表情崩坏，第3帧有轻微嘴部异常，整体存在结构变形问题\"}"}
+{"rel": "基础款/6346.mp4", "group": "eval_good", "score": 30.0, "raw": "{\"frame_probs\": [0, 30, 30, 30], \"video_defect_prob\": 30, \"main_issue\": \"角色整体形象基本保持一致，部分帧存在轻微表情和姿态变化，未发现明显形象缺陷\"}"}
+{"rel": "甜品款/5761.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 70, 30], \"video_defect_prob\": 40, \"main_issue\": \"部分帧中角色头部出现不自然的断裂与缺失，疑似生成错误\"}"}
+{"rel": "冰晶款/7067.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [30, 70, 70, 70], \"video_defect_prob\": 70, \"main_issue\": \"角色左侧出现异常绿色发光碎片，疑似多余肢体或结构崩坏\"}"}
+{"rel": "基础款/6250.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"最后一帧表情异常，眼睛下垂呈悲伤状，与参考图的中性表情不符，疑似表情崩坏\"}"}
+{"rel": "基础款/5680.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色身体出现不规则断裂和缺失，部分帧出现肢体错位与结构崩坏\"}"}
+{"rel": "甜品款/6739.mp4", "group": "eval_good", "score": 70.0, "raw": "{\"frame_probs\": [0, 30, 30, 70], \"video_defect_prob\": 40, \"main_issue\": \"侧面视角下角色脸部五官出现轻微错位和模糊，疑似表情崩坏\"}"}
+{"rel": "潜水款/6193.mp4", "group": "eval_good", "score": 95.0, "raw": "{\"frame_probs\": [0, 30, 70, 95], \"video_defect_prob\": 70, \"main_issue\": \"角色下半身出现异常断裂和多余肢体结构，且表情五官发生扭曲变形\"}"}
