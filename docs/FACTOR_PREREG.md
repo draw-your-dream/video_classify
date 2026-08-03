@@ -516,3 +516,8 @@ mouth_anomaly 过度报警(280 good)待剔;tail/eye/missing 弱;extra_limb 零�
 撕裂 8 / 推拉 7 / 卡顿 3;消失/多实例/识别崩在极端阈值下零命中。
 **审核 gallery 已交付用户**(Downloads/TUTU规则审核gallery:5 外观规则帧拼图 + 6 运动规则视频),
 用户逐规则批准后才冻结联合、单发 eval(两种口径:纯否决拦截率@错杀、混合制放行率增益)。
+
+**E11 判决(2026-08-03 23:2x)**:vjepa2-giant 专家单独 train-OOF AUC 0.6505(前人 vjepa-L ~0.63,
+单体小幅进步;eval 单轴 0.6437 按预注册报告项披露);并栈 OOF 0.2992 < 0.3103 **不过门**,
+eval 栈未触碰。判决:冻结编码器形态收档;编码器线仅剩 E16 微调(通宵在跑,VideoMAE-base
+二折无泄漏 train 分 + full 模型 eval 分,明晨门检)。
