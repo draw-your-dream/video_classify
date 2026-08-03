@@ -78,17 +78,23 @@ def main():
 
     f = open(out_p, "a")
     t0 = time.time()
+    n_err = 0
     for k, rel in enumerate(todo):
-        clip = read_clip(Path(args.videos_dir) / rel, n_frames)
-        if clip is None:
-            f.write(json.dumps({"rel": rel, "error": "no_frames"}) + "\n")
-            continue
-        with torch.inference_mode():
-            inp = proc(videos=list(clip), return_tensors="pt").to("cuda")
-            out = model(**inp.to(torch.bfloat16))
-            h = out.last_hidden_state  # (1, T*, D)
-            emb = h.float().mean(dim=1).squeeze(0).cpu().numpy()
-        f.write(json.dumps({"rel": rel, "emb": [round(float(x), 5) for x in emb]}) + "\n")
+        try:
+            clip = read_clip(Path(args.videos_dir) / rel, n_frames)
+            if clip is None:
+                raise RuntimeError("no_frames")
+            with torch.inference_mode():
+                inp = proc(videos=list(clip), return_tensors="pt").to("cuda")
+                out = model(**inp.to(torch.bfloat16))
+                h = out.last_hidden_state  # (1, T*, D)
+                emb = h.float().mean(dim=1).squeeze(0).cpu().numpy()
+            f.write(json.dumps({"rel": rel, "emb": [round(float(x), 5) for x in emb]}) + "\n")
+        except Exception as e:
+            n_err += 1
+            if n_err <= 5 or n_err % 100 == 0:
+                print(f"ERR[{n_err}] {rel}: {repr(e)[:100]}", flush=True)
+            f.write(json.dumps({"rel": rel, "error": repr(e)[:80]}) + "\n")
         if (k + 1) % 50 == 0:
             f.flush()
             el = time.time() - t0

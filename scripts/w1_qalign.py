@@ -61,7 +61,7 @@ def main():
     from transformers import AutoModelForCausalLM
     model = AutoModelForCausalLM.from_pretrained(
         "q-future/one-align", trust_remote_code=True,
-        dtype=torch.float16, device_map="cuda").eval()
+        torch_dtype=torch.float16, device_map="cuda").eval()
     print("qalign loaded", flush=True)
 
     import time
