@@ -683,3 +683,19 @@ R1悬空:e23 gap_mean≥锚#22值(有限分位P95,名单178,bad率45%)+VLM问"�
 **嘴部回退v3严格版(用户指令,v4放宽作废)**;眉毛沿用v4窄眼规则待三审。
 范围=半量省钱:good全量2256+冠军OOF最低25%尾部bad 406=2662条(用户选项);
 新视频需先补crops_v3提取。判准:新类命中bad/good计数+gallery供用户审。
+
+**W5 预注册(2026-08-04 19:3x,视频输入+质量校准兼备的现成模型,补 W1-W4 缺口)**:
+W5a DOVER(fragment采样保原生帧率时间密度,UGC-VQA监督,输出 technical/aesthetic 两分);
+W5b VideoScore2(Qwen2.5-VL-7B 底座,VideoFeedback2 人工标注上 SFT+RL,三维度:
+visual quality / t2v alignment / physical consistency——我们无生成prompt,alignment 维
+喂占位文本,如实标注该维不可信,主用 visual+physical)。范围:train 全量打分,
+分数并栈过训练门(0.3218);单列 midrank AUC 另报。主要风险:UGC→二次元AIGC域移(W5a),
+prompt缺失(W5b)。排程:今晚链(两把钥匙+crops+v5)完成后接跑;下载先行(网络不占GPU)。
+
+**两把钥匙首判(2026-08-04 19:5x)**:
+R1 悬空:**第二把钥匙成立**——名单确认36/178(20%),盲样1/59(2%空转);锚#22正确确认。
+确认者bad率53%(名单45%),36条含17条标注good→ либо VLM误读 либо 标注漏网,
+已出 gallery(TUTU悬空规则gallery,K编号)交用户定谳。
+R2 场景突变:**第二把钥匙失效**——确认仅7/323(2%)≈盲样(0/60),用户锚#26/27/29全漏:
+相邻帧突变发生在抽帧间隙,VLM无帧对帧比对机制。E22特征(第一把)+VLM(第二把)对称双残,
+此规则收档;备选路线=显式帧差检测(传统CV,非VLM)另行评估。
