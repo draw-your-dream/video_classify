@@ -809,3 +809,17 @@ VideoScore2(Qwen2.5-VL-7B,VideoFeedback2人工标注SFT+RL)三维 0.493/0.470/0.
 但 visual/phys 两维同样无信号,排除prompt缺失的解释。
 **"直接评价视频优劣的现成方法"至此全部试完:Q-Align/pyiqa四件套/DOVER/VideoScore2 + 
 zero-shot VLM 六轮 + 视频编码器四路,无一例外。**
+
+**E34/E35 判决(2026-08-07 15:0x-17:0x):端到端直判创历史最好单体,但并栈不过门**。
+E34 深监督直判(crops_v3 8帧→timm主干→时序池化→多任务头,5折OOF):
+e34a effb0+6辅助头 AUC 0.6650 / gn@95 0.1782(端到端历史最好,前值E16 VideoMAE 0.559);
+e34b convnext_tiny AUC 0.5066(未学动,lr不适配);**e34c 无辅助头消融 AUC 0.6646——
+与e34a持平,证明多任务辅助监督零贡献**,0.665来自端到端学习本身。
+E35 并栈:冠军+e34a 0.3174、+e34c 0.3147、基准0.3218,**均不过门**。
+E36a VLM QLoRA(Qwen3-VL-8B)首跑 AUC 0.5470——**实现缺陷,作废**:labels未mask提示段,
+对数千图像token算loss(收敛在7.0,正常SFT应<1),判别信号被淹没。已修(只对assistant回答
+算loss),小样本验证AUC 0.49→0.63,全量重跑为 E36b。
+**历代微调底座对照(查证)**:v2=Qwen3.5-9B(有泄漏);v3=Qwen2.5-VL-7B-Instruct,8帧@短边192,
+单字"好/坏",1ep,r=16 → 诚实AUC 0.656,现役15专家之一;生产域=Qwen2.5-VL-7B+Qwen3-VL-8B
+5折;E16=VideoMAE-base 0.559。E36 的三处新意:新底座、336px角色中心裁剪(v3仅192px整帧)、
+带缺陷类型的文本目标(但E34消融提示第三点预期应打折)。
