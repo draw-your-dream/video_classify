@@ -159,6 +159,12 @@ def main():
     ap.add_argument("--hard-weight", type=float, default=0.0,
                     help="尾部加权 α:bad 样本 loss 权重 w=1+α*(1-pct),pct 为其 E18 分数在 bad 内的分位。"
                          "α>0 时 E18 判得最低(最难)的 bad 权重最高,直接把表征学习压向顶阈值那批。")
+    ap.add_argument("--tail-only", choices=["off", "hard_neg", "balanced", "all_rel"], default="off",
+                    help="E46 尾部专训:训练集只留 tailB(E18 判最低的那批 bad)+ 选定负样本。"
+                         "hard_neg=取 E18 分数最高的等量 REL(阈值附近最难的负样本,最对准放行率的判别边界);"
+                         "balanced=随机等量 REL;all_rel=全部 REL。区别于 --hard-weight(温和加权)"
+                         "和 E38(固定表征上分区重排,已失败):此处是让表征学习本身只看尾部。")
+    ap.add_argument("--tail-frac", type=float, default=0.20, help="tailB 占 bad 的比例")
     ap.add_argument("--multitask", action="store_true",
                     help="目标文本附缺陷类型词(E36 做法),单独测多任务文本信号的价值")
     ap.add_argument("--workers", type=int, default=24, help="数据预取进程数(机器 112 核)")
@@ -200,7 +206,7 @@ def main():
 
     # tailB:bad 中 E18 分数最低的 20%(顶住阈值那批);REL:全部 good+normal
     bad_idx = np.where(y_all == 1)[0]
-    k = max(5, int(0.20 * len(bad_idx)))
+    k = max(5, int(args.tail_frac * len(bad_idx)))
     tailB = bad_idx[np.argsort(e18_all[bad_idx])[:k]]
     REL = np.where(y_all == 0)[0]
     print(f"tailB={len(tailB)} 条(E18 分数 {e18_all[tailB].min():.3f}~{e18_all[tailB].max():.3f}), "
@@ -299,6 +305,19 @@ def main():
         model.print_trainable_parameters()
         opt = torch.optim.AdamW([p for p in model.parameters() if p.requires_grad], lr=args.lr)
         order = list(a_idx)
+        if args.tail_only != "off":
+            a_set = set(int(x) for x in a_idx)
+            pos = [int(i) for i in tailB if int(i) in a_set]
+            rel_a = [int(i) for i in REL if int(i) in a_set]
+            if args.tail_only == "hard_neg":          # 阈值附近最难的负样本
+                rel_a = sorted(rel_a, key=lambda i: -e18_all[i])[:len(pos)]
+            elif args.tail_only == "balanced":
+                rel_a = list(np.random.RandomState(0).choice(
+                    rel_a, min(len(pos), len(rel_a)), replace=False).astype(int))
+            order = pos + rel_a
+            print(f"尾部专训[{args.tail_only}] fold{fi}: 正 {len(pos)} 条 tailB + 负 {len(rel_a)} 条 REL "
+                  f"= {len(order)}(原 {len(a_idx)});负样本 E18 分数 "
+                  f"{e18_all[rel_a].min():.3f}~{e18_all[rel_a].max():.3f}", flush=True)
         for ep in range(args.epochs):
             random.shuffle(order)
             model.train()
@@ -348,7 +367,7 @@ def main():
           flush=True)
     np.save(ROOT / f"data/{args.tag}_score.npy", score)
     json.dump({"tag": args.tag, "model": args.model, "target": args.target, "frames": args.frames,
-               "px": args.px, "epochs": args.epochs, "hard_weight": args.hard_weight, "multitask": args.multitask,
+               "px": args.px, "epochs": args.epochs, "hard_weight": args.hard_weight, "multitask": args.multitask, "tail_only": args.tail_only, "tail_frac": args.tail_frac,
                "auc": A, "tail_auc": TA, "n_tail": len(tb), "lam": args.lam},
               open(ROOT / f"data/{args.tag}_summary.json", "w"), ensure_ascii=False, indent=1)
     print("E45_DONE", flush=True)
