@@ -25,8 +25,13 @@ import pickle
 import random
 from pathlib import Path
 
+os.environ.setdefault("OPENCV_FFMPEG_CAPTURE_OPTIONS", "threads;1")   # 并行 cv2 必设,
+os.environ.setdefault("OPENCV_VIDEOIO_PRIORITY_MSMF", "0")            # 否则 worker 多时 ffmpeg 线程耗尽
+
 import cv2
 import numpy as np
+
+cv2.setNumThreads(1)
 import torch
 import torch.utils.data
 from PIL import Image
@@ -92,22 +97,55 @@ def make_loader(idxs, train, workers):
         collate_fn=_first, prefetch_factor=(6 if workers else None))
 
 
-def load_frames(rel, n, px=336):
-    d = ROOT / "data/crops_v3" / rel.replace(".mp4", "")
-    jp = sorted(d.glob("f*.jpg"))
-    if len(jp) < 4:
+def _to_pil(im, px):
+    H, W = im.shape[:2]
+    s = px / max(H, W)
+    return Image.fromarray(cv2.cvtColor(
+        cv2.resize(im, (int(W * s), int(H * s))), cv2.COLOR_BGR2RGB))
+
+
+def _from_video(rel, n, px):
+    """从原始 mp4 抽帧。顺序读并只保留目标帧(seek 对部分编码不准且慢),
+    只驻留 n 帧,不缓存整段。"""
+    vp = ROOT / "data/corpus_videos" / rel
+    if not vp.exists():
         return None
-    idx = np.linspace(0, len(jp) - 1, n).round().astype(int)
-    ims = []
-    for i in idx:
-        im = cv2.imread(str(jp[i]))
-        if im is None:
+    cap = cv2.VideoCapture(str(vp))
+    total = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    if total < 4:
+        cap.release()
+        return None
+    want = set(np.linspace(0, total - 1, n).round().astype(int).tolist())
+    ims, k = [], 0
+    while True:
+        ok, im = cap.read()
+        if not ok:
+            break
+        if k in want:
+            ims.append(_to_pil(im, px))
+        k += 1
+    cap.release()
+    return ims if len(ims) >= 4 else None
+
+
+def load_frames(rel, n, px=336, source="auto"):
+    """source: crops=只用 SAM3 裁剪(历史行为,覆盖 2849/3877);
+    auto=无裁剪则回退原始视频整帧(覆盖 3877);video=一律用整帧(保留背景)。"""
+    if source != "video":
+        d = ROOT / "data/crops_v3" / rel.replace(".mp4", "")
+        jp = sorted(d.glob("f*.jpg"))
+        if len(jp) >= 4:
+            idx = np.linspace(0, len(jp) - 1, n).round().astype(int)
+            ims = []
+            for i in idx:
+                im = cv2.imread(str(jp[i]))
+                if im is None:
+                    return None
+                ims.append(_to_pil(im, px))
+            return ims
+        if source == "crops":
             return None
-        H, W = im.shape[:2]
-        s = px / max(H, W)
-        ims.append(Image.fromarray(cv2.cvtColor(
-            cv2.resize(im, (int(W * s), int(H * s))), cv2.COLOR_BGR2RGB)))
-    return ims
+    return _from_video(rel, n, px)
 
 
 def auc(pos, neg):
@@ -165,6 +203,12 @@ def main():
                          "balanced=随机等量 REL;all_rel=全部 REL。区别于 --hard-weight(温和加权)"
                          "和 E38(固定表征上分区重排,已失败):此处是让表征学习本身只看尾部。")
     ap.add_argument("--tail-frac", type=float, default=0.20, help="tailB 占 bad 的比例")
+    ap.add_argument("--metric-subset", choices=["crops", "all"], default="crops",
+                    help="tail-AUC/AUC 的计算池。crops=固定为有 SAM3 裁剪的样本,"
+                         "使 --frame-source crops 与 video 两种训练模式的数字严格可比")
+    ap.add_argument("--frame-source", choices=["crops", "auto", "video"], default="crops",
+                    help="crops=历史行为(仅 SAM3 裁剪,覆盖 2849/3877,缺失的 999 条 bad 被整条跳过);"
+                         "auto=无裁剪时回退原始视频整帧(覆盖 3877);video=一律整帧(另测背景信息价值)")
     ap.add_argument("--multitask", action="store_true",
                     help="目标文本附缺陷类型词(E36 做法),单独测多任务文本信号的价值")
     ap.add_argument("--workers", type=int, default=24, help="数据预取进程数(机器 112 核)")
@@ -204,11 +248,21 @@ def main():
     print(f"样本 {len(items)}  good {int((t_all==0).sum())} normal {int((t_all==1).sum())} "
           f"bad {int((t_all==2).sum())}", flush=True)
 
+    # 指标池:固定为"有 crops 的样本",使 crops / video 两种训练模式的 tail-AUC 完全可比
+    # (否则 crops 模式评估基数 2849、video 模式 3877,tailB 定义都不同,数字无法对照)
+    if args.metric_subset == "crops":
+        pool = np.array([(ROOT / "data/crops_v3" / it[0].replace(".mp4", "")).is_dir()
+                         and len(list((ROOT / "data/crops_v3" / it[0].replace(".mp4", ""))
+                                      .glob("f*.jpg"))) >= 4 for it in items])
+        print(f"指标池限定为有 crops 的 {int(pool.sum())}/{len(items)} 条(跨模式可比)", flush=True)
+    else:
+        pool = np.ones(len(items), bool)
+
     # tailB:bad 中 E18 分数最低的 20%(顶住阈值那批);REL:全部 good+normal
-    bad_idx = np.where(y_all == 1)[0]
+    bad_idx = np.where((y_all == 1) & pool)[0]
     k = max(5, int(args.tail_frac * len(bad_idx)))
     tailB = bad_idx[np.argsort(e18_all[bad_idx])[:k]]
-    REL = np.where(y_all == 0)[0]
+    REL = np.where((y_all == 0) & pool)[0]
     print(f"tailB={len(tailB)} 条(E18 分数 {e18_all[tailB].min():.3f}~{e18_all[tailB].max():.3f}), "
           f"REL={len(REL)} 条;E18 自身 tail-AUC={auc(e18_all[tailB], e18_all[REL]):.4f}", flush=True)
 
@@ -245,7 +299,7 @@ def main():
     score = np.full(len(items), np.nan)
 
     def build(rel, tgt=None):
-        ims = load_frames(rel, args.frames, args.px)
+        ims = load_frames(rel, args.frames, args.px, args.frame_source)
         if ims is None:
             return None
         content = [{"type": "image", "image": im} for im in ims]
@@ -356,8 +410,9 @@ def main():
     ok = np.isfinite(score)
     tb = [i for i in tailB if ok[i]]
     rl = [i for i in REL if ok[i]]
-    A = auc(score[y_all == 1][np.isfinite(score[y_all == 1])],
-            score[y_all == 0][np.isfinite(score[y_all == 0])])
+    mpos = (y_all == 1) & pool & ok
+    mneg = (y_all == 0) & pool & ok
+    A = auc(score[mpos], score[mneg])
     TA = auc(score[tb], score[rl])
     print(f"\n=== [{args.tag}] {args.model.split('/')[-1]} target={args.target} "
           f"frames={args.frames} ===", flush=True)
