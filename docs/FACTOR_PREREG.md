@@ -1045,3 +1045,65 @@ E18 自身 tail-AUC 0.2719),唯一变量是训练数据来源:
 容量(32B,单折假阳性 0.5727 → 满折 0.5316)、数据来源(整帧/裁剪)——
 **tail-AUC 全部落在 0.4730~0.5324**,判准 0.55 无一穿过。
 未解疑点(留档,不影响本结论):train 缺 crops 26.5% 而 eval 仅 1.4%,该不对称尚无解释。
+
+**E50–E53 冻结预注册（2026-08-10 13:10:33 +08:00，S0 前）**：完整不可变协议正文为
+`data/prod500/E50_PREREG_DRAFT.md`，505 行、36,376 bytes，SHA-256=
+`23d6cb356cd271e02fee1b8d9ead9e660af1f6dbabd493433f9f3e4931545c35`。35% 为主目标、50% 为
+stretch；唯一业务口径仍是 95% bad 召回下 GN 严格 `<T` 放行。S0 builder SHA-256=
+`4e69b4bc46ed3c0dc5ec756a28f0be072f160dc9d035ee67f977f60a0f88a65f`，必须一次性原子建立
+25% prospective shadow、5-fold discovery outer folds 与每个 outer 内冻结的 4-fold inner split；
+S0 后不得重分。配对 E18 train-only nested-meta builder SHA-256=
+`a04900603f2e35dd6ccff18a67ce5fdf88734e945f3cddf3b5bfe0a96f0b53b6`；strict rank/frontier
+harness SHA-256=`66dc519841074c9f578cb186d4732788a8e2d0fb5dfafd700e8b74ea1a1f7119`。
+
+本冻结轮次唯一可运行候选为 **E51**：V-JEPA 2.1 Base-384、64 帧、长边双端点视图、冻结骨干与
+固定 local dense head。extractor SHA-256=`b639dcc04dc60fae26c3a5725f3eebc46121b62e270c89f7e260ebb4b96bc37e`，
+官方 checkpoint SHA-256=`848a77c33cc9e6649ed2119c9bea1e2c569bcdab9539ff3e7c02ccc2959ddf4d`，
+G0=`PASS`；head SHA-256=`b10a0dcf0bc15ffb15e568f81d2587998284c9497424e3a21af40b3b7dd423ee`，
+synthetic self-test=`PASS`。E50 官方 TRAJAN G0 因 425 秒仍停在全 corpus 字节 hash、尚未用 GPU 而
+记 `DEFERRED_BY_COST`（不是负结果、不是 G0 失败）；E53 同步 `DEFERRED_BY_COST`；E52=
+`BLOCKED_BY_DATA`；full 3DSPA=`BLOCKED_BY_UPSTREAM`。冻结时尚未创建 S0，未运行任何
+E50–E53 标签指标或 shadow，未读取 eval 标签/特征/分数/指标，未运行最终 eval。后续任何协议、
+代码、权重或候选变更必须新立编号并重新建立 S0，不得修改本条或正文后续解释当前结果。
+
+**E51 判决（2026-08-10）：有效负结果，35/50 discovery 门均失败，不进 shadow/eval。**
+S0 一次性冻结 3,877 条 train 为 discovery=2,908、prospective shadow=969；E51 特征
+2,908/2,908 完成、missing/error=0。固定 5×4 nested head 的 candidate bundle SHA-256=
+`0ff6f27e6e5ec38037f9412ae5f8984e4dd92ff2d84b78c7b68001a396d505a2`；与 paired E18
+严格合并后的 discovery bundle SHA-256=
+`4f6fc393a1032ab9374e4b6ebf94b9ce1c04680b388dd072a051da909541c53d`；完整 5,000 次
+bootstrap + 200 次 matched-null 裁判 SHA-256=
+`dbfe47d9939c3134dbf1e1a2d51b05bf9af118ef07ef61f5dcfe3fac4d8bce2f`。
+
+同协议 E18 `gn@95=0.3026005`（512/1692 GN 放行），E51 固定公式后
+`gn@95=0.2978723`（504/1692），配对 Δ=`-0.0047281`，95%CI
+`[-0.0301418,+0.0206856]`；5 折增益符号为 `0,+,+,-,-`。Frontier-AUC35 虽有点值
+`0.6089`，但 95%CI=`[0.4123,0.7358]` 且未超过单家族 max-null 99% 分位；
+Frontier-AUC50=`0.4750`。整体 midrank AUC 也从 `0.751064` 微降到 `0.750630`。
+故不是“差一点达到35”，而是主业务点值和整体排序都没有正增量；按冻结停止条件不得消费
+prospective shadow。shadow 标签、eval 标签/特征/分数/指标和最终 eval 均未打开。
+
+---
+
+**E50 预注册(2026-08-11,用户指令:全力提升放行率,集中僵硬/刚体/物理,或全量跑初版眉毛检测)**。
+**定位分析(先于一切实验)**:eval tail20 缺陷构成 = 运动族11条(僵硬6/卡顿6/少动3,有重叠)
++ 还原族8条(大小变化3:16713/17148/16396;还原度4含5822尾巴;衣服一致性1)+ 物理1。
+**用户审计的 H086/H089/H099/H101 = 5719/6565/5822/6228,全部落在 tail20 内**,
+其中三条眉毛可判、一条尾巴粉色物体。
+**历史缺口确认**:brow_confirm 仅覆盖 850 候选中 top-400(CNN 饱和 393 条 bmax≥0.99 所致),
+四条目标全部未进过 VLM 确认——6228 btop3=0.79 被截断挤出,5719(0.444)/5822(0.430)低于
+0.5 阈值,6565(0.042)被 CNN 漏掉。**是覆盖问题,非检测能力问题。**
+
+**E50 = 规则否决门(veto gate)混合制**,三条轴:
+ A 眉毛:补齐 brow_confirm 全部候选(btop3≥0.4,无截断)+ **eval 全量 968 条 VLM 扫描**
+   (脱离 CNN 依赖,规则=「头部放大后 VLM 确认眉毛」,prompt 冻结自 v6 已验证版本,81-84% 精度);
+ B 大小变化:新客观检测器,crops_v3 逐帧 bbox 尺寸轨迹(锚样本 16713/17148/16396);
+ C 尾巴粉色:tail_pink.csv 特征已有(锚 5822 persist=1.0),规则化 + VLM 确认。
+**混合制记账法(冻结)**:否决集 V 并入后,阈值 T 重新按 95% 总召回定
+(被 V 拦截的 bad 计入召回),放行率 = 未被否决且 p<T 的 good+normal 占比。
+每否决一条本可放行的 good ≈ -0.18pt,每拦下一条 tail bad ≈ +0.9pt。
+**纪律**:检测器参数/prompt 全部冻结自 train 侧既有开发;先在 train-OOF 上算混合制增益
+(须 >0.3218),过门才做 eval 单发(第 11 次接触)。
+**须如实声明的偏差**:轴的选择受用户对 eval 难例审计的启发(选择性偏差风险);
+但检测器本身未针对 eval 标签调参,且 eval 全量扫描为 label-blind。
+**僵硬/刚体(运动族 11 条,最大头寸)**:另行探索——光流场渲染成图喂 VLM(设计过未执行)。
