@@ -24,9 +24,9 @@ AMBER = "#d9a83a"
 OUT = os.path.dirname(os.path.abspath(__file__))
 
 # ---------- 图1:放行率演进 ----------
-stages = ["之前的系统", "更换组合器\n(上次汇报)", "组合器系统搜索\n(上次汇报)", "本周:眉毛检测门"]
+stages = ["之前的系统", "更换组合器", "组合器系统搜索", "加入眉毛检测门"]
 vals = [18.8, 26.5, 29.1, 30.9]
-cols = ["#4a4a46", "#33517a", "#2a68b5", BLUE]
+cols = ["#33517a", "#33517a", "#33517a", "#33517a"]
 
 fig, ax = plt.subplots(figsize=(8.6, 4.1), dpi=160)
 fig.patch.set_facecolor(BG)
@@ -34,13 +34,7 @@ ax.set_facecolor(BG)
 ax.bar(range(4), vals, width=0.58, color=cols, edgecolor="none")
 for i, v in enumerate(vals):
     ax.text(i, v + 0.55, f"{v}%", ha="center", fontsize=12.5,
-            color=INK if i < 3 else "#7db8f5",
-            fontweight="bold" if i == 3 else "normal", fontproperties=F)
-d = vals[3] - vals[2]
-ax.annotate("", xy=(2.72, vals[3] + 3.1), xytext=(2, vals[2] + 3.1),
-            arrowprops=dict(arrowstyle="->", color="#7db8f5", lw=1.4))
-ax.text(2.36, vals[3] + 3.7, f"本周 +{d:.1f} 个百分点", ha="center", fontsize=11,
-        color="#7db8f5", fontproperties=F)
+            color=INK, fontproperties=F)
 ax.set_xticks(range(4))
 ax.set_xticklabels(stages, fontproperties=F, fontsize=11, color=INK2)
 ax.set_ylabel("自动放行的好视频比例(%)", fontproperties=F, fontsize=11.5, color=INK2)
