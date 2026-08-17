@@ -1374,3 +1374,10 @@ X303全宽结构(与堆叠无异)。
 (flash 自身两遍秩相关 0.71),标签复核是下一个解锁点。
 产物:data/pbase/out/{lockbox_test_score.npy, r1_lockbox.npz, flash_*_1233.json};
 锁箱切分 data/lockbox_split.json。
+
+**E-32B:物理/运动专项 LoRA @ Qwen2.5-VL-32B fold0(2026-08-17 夜)——NO-GO,微调墙第 6 次**。
+监督=物理/运动族(7子标签)bad vs gn,其他bad剔除;8帧输入;bf16+梯度检查点。
+fold0(411 eval):族 AUC 0.5997 < 门 0.60,全bad 0.5046;分数压缩(std 0.032)。
+至此微调路线总账:7B二分/7B还原度专项(带官方立绘)/32B物理运动专项 × 新旧语料
+= 6 次独立失败,AUC 带 0.47-0.60。判决:千级样本+开源VLM微调对本任务整体收档,
+判官通道唯一活路=闭源大杯零样本(flash 多遍均值)。fold1/2 取消。
