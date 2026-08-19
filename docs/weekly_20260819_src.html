@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TUTU 生成视频质检判别器 周报(2026-08-19)</title>
+<style>
+  :root{
+    --paper:#faf9f6; --ink:#22262e; --muted:#5c6470; --line:#e3e0d8;
+    --ra:#c2410c; --ra-soft:#fdf0e7;
+    --rb:#1d4ed8; --rb-soft:#eef3fd;
+    --hu:#7c3aed; --hu-soft:#f3eefc;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--paper);color:var(--ink);
+    font-family:Georgia,"Noto Serif SC","Source Han Serif SC","Songti SC",SimSun,serif;
+    font-size:15.5px;line-height:2.0;padding:56px 24px 80px}
+  .wrap{max-width:880px;margin:0 auto}
+  .sans{font-family:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif}
+  h1{font-size:26px;line-height:1.5;margin:0 0 6px;font-weight:700}
+  .subtitle{color:var(--muted);font-size:14.5px;margin-bottom:34px}
+  h2{font-size:19px;margin:52px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line);font-weight:700}
+  h2 .no{color:var(--muted);font-weight:400;margin-right:10px}
+  p{margin:13px 0}
+  .lead{font-size:16px}
+  b.ra{color:var(--ra)} b.rb{color:var(--rb)} b.hu{color:var(--hu)}
+  figure{margin:22px 0}
+  figure img{width:100%;height:auto;border:1px solid var(--line);border-radius:8px}
+  table{border-collapse:collapse;width:100%;margin:14px 0;font-size:14.5px}
+  th,td{border:1px solid var(--line);padding:9px 12px;text-align:left;vertical-align:top;line-height:1.8}
+  th{background:#f3f1ea;font-weight:700;white-space:nowrap}
+  td.n{white-space:nowrap}
+  .quote{border-left:3px solid var(--rb);background:var(--rb-soft);padding:13px 19px;
+    border-radius:0 8px 8px 0;margin:20px 0;font-size:15px}
+  svg text{font-family:-apple-system,"PingFang SC","Noto Sans SC","Microsoft YaHei",sans-serif}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>生成视频质检判别器:新一批标注数据上的结果与最终方案</h1>
+  <div class="subtitle sans">周报 · 8 月 14 日至 8 月 18 日 · 2026 年 8 月 19 日</div>
+
+  <p class="lead">本周拿到新一批 1233 条已标注视频,它们来自当前正在使用的生成链路,标注标准也是当前这一版。
+  此前用于开发的旧数据与线上产出对不上,这批数据第一次让评估结果可信。本报告只讲这批数据上的成绩:
+  在放行 80% 合格视频的前提下,判别器能拦下 <b class="rb">54.2%</b> 的问题视频,
+  而原有线上系统在同一批数据上只有 26.1%。下面依次说明这个数字怎么读、
+  <b class="ra">Gemini 判官</b>与<b class="rb">源图检测模型</b>各自贡献多少、最终方案的完整流程与耗时。</p>
+
+  <h2 class="sans"><span class="no">一</span>任务与评估口径</h2>
+
+  <p>判别器不做最终判决,它做排序:给每条生成视频打一个"可能有问题"的分数,分数最低的一批自动放行,
+  分数最高的一批送人工复核。因此衡量它的方式是一条曲线上的一个工作点——固定自动放行多少合格视频,
+  看这一刀能同时拦下多少问题视频。本报告统一取放行 80%,记作拦截率;放行比例越高,拦截率必然越低,
+  这条取舍关系就是后面第二张图。</p>
+
+  <p>数据是 1233 条 5 秒视频,人工三档标注:有明显问题 835 条、轻微问题 234 条、合格 164 条;
+  覆盖 8 款 TUTU 形象、5 类生成任务。按源图分组切分为两份:867 条用于建模与选型,
+  366 条封存作一次性验证。分组切分的意思是同一张源图生成的视频只会出现在其中一侧,
+  避免模型靠"见过同一个源图"取得虚高成绩。</p>
+
+  <h2 class="sans"><span class="no">二</span>结果</h2>
+
+  <p>下图是各路信号单独排序的成绩,以及把它们合并之后的成绩。所有数字都在 867 条建模集上、
+  用十折分组交叉验证得到,即每条视频的分数都由没有见过它的模型给出。</p>
+
+  <figure><!--FIG_1--></figure>
+
+  <p>三点值得注意。其一,原有线上系统直接套用只有 26.1%,与它在旧数据上的表现相差很远,
+  说明生成链路与标注标准换代之后,旧特征体系已基本失效,重建是必要的而不是可选的。
+  其二,单项最强的是源图检测模型 41.1%,它只看视频的第一帧,不看运动;
+  这说明相当一部分问题在生成的起点就已经存在。其三,五路信号合并后的 54.2%
+  明显高于任何单项,各路信号抓的是不同的失败方式,合并是有实际收益的。</p>
+
+  <figure><!--FIG_2--></figure>
+
+  <p>这条曲线给的是放行比例与拦截率之间的取舍:横轴是自动放行掉的合格视频比例,
+  纵轴是同时被拦下的问题视频比例。当前方案在放行 70%、80%、90% 三个工作点上分别拦下
+  62.0%、54.2%、28.3%。曲线在 90% 之后下降很快,意味着若要把人工复核量压到一成以内,
+  代价会明显上升;放行 80% 是目前性价比合适的位置。</p>
+
+  <table class="sans">
+    <tr><th>工作点</th><th>自动放行的合格视频</th><th>拦下的问题视频</th></tr>
+    <tr><td>放行 70%</td><td class="n">70%</td><td class="n">62.0%</td></tr>
+    <tr><td>放行 80%(推荐)</td><td class="n">80%</td><td class="n">54.2%</td></tr>
+    <tr><td>放行 90%</td><td class="n">90%</td><td class="n">28.3%</td></tr>
+  </table>
+
+  <p>关于结果的稳定性:交叉验证的随机划分本身会带来波动,单次划分的读数在 49.7% 到 55.9% 之间,
+  平均 53.6%。最终方案把 8 组不同划分的模型合起来取平均排名,得到 54.2%,
+  这样做既提高了成绩,也让部署时的表现不依赖于某一次幸运的划分。</p>
+
+  <div class="quote">封存的 366 条曾在上一版系统上开过一次,拦截率 50.8%,与建模集上的读数一致,
+  说明选型过程没有把成绩"喂"高。上一版用到了上游图片人工质检标注作为输入,本周确认该标注在推理时拿不到,
+  于是去掉它重建了整套方案;封存集只允许开一次,因此终版只报建模集上的交叉验证读数。</div>
+
+  <p>成绩在不同生成任务之间差别很大。下表沿用数据表里的任务代号,可以看到指定图复刻类的任务表现最好,
+  而基础款带道具与通用类明显偏低——这两类的问题多为道具与角色的融合错误,当前信号覆盖不足。
+  另外,在被漏掉的问题视频中,超过一半属于"形象还原度"一类,即角色画得不像,
+  这是目前最大的缺口,也是下一步的主攻方向。</p>
+
+  <table class="sans">
+    <tr><th>生成任务</th><th>建模集条数</th><th>其中有问题</th><th>拦截率</th></tr>
+    <tr><td>exact-r2</td><td class="n">167</td><td class="n">120</td><td class="n">63.3%</td></tr>
+    <tr><td>exact-r1</td><td class="n">307</td><td class="n">222</td><td class="n">51.4%</td></tr>
+    <tr><td>base-noprop</td><td class="n">229</td><td class="n">115</td><td class="n">46.1%</td></tr>
+    <tr><td>generic</td><td class="n">78</td><td class="n">64</td><td class="n">21.9%</td></tr>
+    <tr><td>base-props</td><td class="n">86</td><td class="n">66</td><td class="n">16.7%</td></tr>
+  </table>
+
+  <h2 class="sans"><span class="no">三</span>Gemini 的使用方式与成绩</h2>
+
+  <p>方案里的一路信号是让大模型直接看视频并给出质检意见,用的是 <b class="ra">Gemini 3.6 Flash</b>。
+  它支持原生视频输入,整段 5 秒视频按每秒 5 帧直接送进去,同时附上该视频的首帧源图与官方形象图,
+  并要求以固定的 JSON 结构输出,内容包括五个维度的逐项检查、每个缺陷的时间区间与可见现象、
+  三档判定与一个 0 到 100 的问题分。五个维度是形象还原、动作连续性、交互与接触、物理与物体、画面稳定。
+  提示词中明确要求以首帧源图为准判断"画得对不对",而不是依赖模型自己对角色应该长什么样的印象。</p>
+
+  <p>同一条视频独立跑两遍,取两次分数的排名平均。这样做是因为单跑一遍的成绩在不同批次之间会有约五个百分点的漂移,
+  两遍平均后稳定下来。判官单独排序的拦截率是 34.4%,在合并方案里它是四路模型信号中的一路。
+  另外两种用法经测试没有增益,未采用:用更大的 Pro 版本做同样的排序,成绩没有超过 Flash;
+  把视频拆成单帧、让模型逐帧与源图比对判断像不像,结果与随机排序无异。
+  后者的含义是"画得像不像"这件事,模型能看出来的部分远少于标注员判定的部分,
+  这一路最终由图像特征的统计方式承担,而不是由模型的文字判断承担。</p>
+
+  <p>成本方面,每条视频两次调用,单次输入约四千个 token。处理 1000 条视频约需 2000 次调用、
+  合计约九百万 token,按当前 Flash 价格折算约三到五美元。这部分不占用本地算力。</p>
+
+  <h2 class="sans"><span class="no">四</span>源图检测模型</h2>
+
+  <p>另一路信号是一个只看图的模型。生成链路的输入是一张源图,而这些源图本身有一批已经过人工质检并标注了好坏,
+  共 4553 张。我们用图像编码器把这些图片转成向量,训练了一个梯度提升模型来判断图片是否有问题,
+  再把它作用在每条视频的第一帧上,输出一个分数进入合并层。</p>
+
+  <p>需要说明的是,人工质检的标注只用于训练这个模型,不作为判别器推理时的输入。
+  推理时可用的只有视频与源图本身,这样这套方案不依赖于"图片质检必须先于视频生成完成"这一前提。</p>
+
+  <p>这一路的效果在单项中最好,拦截率 41.1%。它只看第一帧却能超过看完整段视频的判官,
+  说明问题视频中有相当比例在第一帧就已经能看出端倪,后续的运动只是把问题延续下去。</p>
+
+  <h2 class="sans"><span class="no">五</span>最终方案的完整流程与耗时</h2>
+
+  <p>完整流程是五路信号并行计算、合并成 28 个数值、由一个线性模型给出最终分数、按分数排序后放行。
+  五路之间没有依赖关系,可以同时跑,因此端到端耗时取决于其中最慢的一路,而不是各路耗时相加。</p>
+
+  <figure>
+  <svg viewBox="0 0 980 560" width="100%" role="img" aria-label="判别器完整流程:五路信号并行计算后合并打分排序">
+    <defs>
+      <marker id="ab" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0,0 L10,5 L0,10 z" fill="#9aa3b2"/></marker>
+    </defs>
+
+    <rect x="14" y="188" width="150" height="118" rx="11" fill="#f3f1ea" stroke="#a8a29e" stroke-width="1.5"/>
+    <text x="89" y="222" text-anchor="middle" fill="#22262e" font-size="14.5" font-weight="700">输入</text>
+    <text x="89" y="248" text-anchor="middle" fill="#5c6470" font-size="12">5 秒生成视频</text>
+    <text x="89" y="270" text-anchor="middle" fill="#5c6470" font-size="12">该视频的源图</text>
+    <text x="89" y="292" text-anchor="middle" fill="#5c6470" font-size="12">款式与任务信息</text>
+
+    <g fill="none" stroke="#9aa3b2" stroke-width="1.6" marker-end="url(#ab)">
+      <path d="M168,238 C205,238 205,52 240,52"/>
+      <path d="M168,238 C205,238 205,152 240,152"/>
+      <path d="M168,247 L240,247"/>
+      <path d="M168,256 C205,256 205,342 240,342"/>
+      <path d="M168,256 C205,256 205,442 240,442"/>
+    </g>
+
+    <rect x="244" y="22" width="366" height="62" rx="10" fill="#fdf0e7" stroke="#c2410c" stroke-width="1.7"/>
+    <text x="264" y="48" fill="#c2410c" font-size="14" font-weight="700">Gemini 3.6 Flash 判官,同一条跑两遍</text>
+    <text x="264" y="70" fill="#8a5a3a" font-size="11.5">整段视频 + 源图 + 官方形象图,输出结构化意见</text>
+    <text x="596" y="60" text-anchor="end" fill="#c2410c" font-size="12.5" font-weight="700">2 个数值</text>
+
+    <rect x="244" y="122" width="366" height="62" rx="10" fill="#eef3fd" stroke="#1d4ed8" stroke-width="1.7"/>
+    <text x="264" y="148" fill="#1d4ed8" font-size="14" font-weight="700">视觉特征栈与专家模型集合</text>
+    <text x="264" y="170" fill="#5b6b8f" font-size="11.5">检测、光流、姿态与视频编码器,共 303 项测量</text>
+    <text x="596" y="160" text-anchor="end" fill="#1d4ed8" font-size="12.5" font-weight="700">2 个数值</text>
+
+    <rect x="244" y="222" width="366" height="62" rx="10" fill="#eef3fd" stroke="#1d4ed8" stroke-width="1.7"/>
+    <text x="264" y="248" fill="#1d4ed8" font-size="14" font-weight="700">官方形象图对照</text>
+    <text x="264" y="270" fill="#5b6b8f" font-size="11.5">16 帧与 43 张官方视角图比对,取相似度曲线统计量</text>
+    <text x="596" y="260" text-anchor="end" fill="#1d4ed8" font-size="12.5" font-weight="700">11 个数值</text>
+
+    <rect x="244" y="322" width="366" height="62" rx="10" fill="#eef3fd" stroke="#1d4ed8" stroke-width="1.7"/>
+    <text x="264" y="348" fill="#1d4ed8" font-size="14" font-weight="700">源图检测模型</text>
+    <text x="264" y="370" fill="#5b6b8f" font-size="11.5">只看视频第一帧,由 4553 张已质检图片训练</text>
+    <text x="596" y="360" text-anchor="end" fill="#1d4ed8" font-size="12.5" font-weight="700">1 个数值</text>
+
+    <rect x="244" y="422" width="366" height="62" rx="10" fill="#f3f1ea" stroke="#a8a29e" stroke-width="1.7"/>
+    <text x="264" y="448" fill="#22262e" font-size="14" font-weight="700">款式与任务类别</text>
+    <text x="264" y="470" fill="#5c6470" font-size="11.5">8 款形象与 5 类任务的编码,校正各类难度差</text>
+    <text x="596" y="460" text-anchor="end" fill="#5c6470" font-size="12.5" font-weight="700">12 个数值</text>
+
+    <g fill="none" stroke="#9aa3b2" stroke-width="1.6" marker-end="url(#ab)">
+      <path d="M614,52 C660,52 660,236 700,236"/>
+      <path d="M614,152 C660,152 660,240 700,240"/>
+      <path d="M614,252 L700,247"/>
+      <path d="M614,352 C660,352 660,254 700,254"/>
+      <path d="M614,452 C660,452 660,258 700,258"/>
+    </g>
+
+    <rect x="704" y="188" width="262" height="118" rx="11" fill="#eef3fd" stroke="#1d4ed8" stroke-width="1.8"/>
+    <text x="835" y="220" text-anchor="middle" fill="#1d4ed8" font-size="14.5" font-weight="700">合并打分</text>
+    <text x="835" y="245" text-anchor="middle" fill="#5b6b8f" font-size="12">28 个数值 → 逻辑回归</text>
+    <text x="835" y="267" text-anchor="middle" fill="#5b6b8f" font-size="12">8 组交叉验证模型</text>
+    <text x="835" y="289" text-anchor="middle" fill="#5b6b8f" font-size="12">取排名平均</text>
+
+    <path d="M835,310 L835,344" fill="none" stroke="#9aa3b2" stroke-width="1.6" marker-end="url(#ab)"/>
+    <rect x="668" y="350" width="298" height="52" rx="10" fill="#f3f1ea" stroke="#a8a29e" stroke-width="1.5"/>
+    <text x="817" y="382" text-anchor="middle" fill="#22262e" font-size="13.5">按分数排序,放行分数最低的 80%</text>
+
+    <path d="M817,406 L817,432" fill="none" stroke="#7c3aed" stroke-width="1.6" marker-end="url(#ab)"/>
+    <rect x="668" y="438" width="298" height="52" rx="10" fill="#f3eefc" stroke="#7c3aed" stroke-width="1.5"/>
+    <text x="817" y="470" text-anchor="middle" fill="#7c3aed" font-size="13.5" font-weight="700">其余 20% 送人工复核</text>
+  </svg>
+  </figure>
+
+  <p>下表是处理 1000 条视频的耗时。判官那一路走外部接口,不占本地算力;其余四路跑在一张 H100 上,
+  其中视觉特征栈是唯一的瓶颈。表中数字是按单条实测耗时外推的估算,不是端到端计时结果。</p>
+
+  <table class="sans">
+    <tr><th>环节</th><th>使用的资源</th><th>1000 条耗时</th></tr>
+    <tr><td>Gemini 判官,两遍</td><td>外部接口,16 路并发</td><td class="n">约 30 分钟</td></tr>
+    <tr><td>视觉特征栈与专家模型</td><td>1 张 H100</td><td class="n">约 60 分钟</td></tr>
+    <tr><td>官方形象图对照</td><td>同一张卡,与上一项共用编码器</td><td class="n">约 8 分钟</td></tr>
+    <tr><td>源图检测模型</td><td>同一张卡</td><td class="n">约 3 分钟</td></tr>
+    <tr><td>合并打分与排序</td><td>CPU</td><td class="n">1 分钟以内</td></tr>
+    <tr><th>端到端(五路同时进行)</th><th>1 张 H100 + 外部接口</th><th>约 1 至 1.5 小时</th></tr>
+  </table>
+
+  <p>此外每 1000 条视频的接口费用约三到五美元。全流程只做推理,不含任何训练;
+  模型一次训练完成后可反复使用,重新训练只在数据批次更新时进行,单次约十分钟。
+  视觉特征栈中有一部分测量项对最终分数贡献很小,裁掉它们可以进一步缩短这一路的耗时,
+  这是下一步的工程事项,尚未实测。</p>
+
+  <h2 class="sans"><span class="no">六</span>下一步</h2>
+
+  <p>以下是方向,不是已完成的工作。第一,8 月 13 日那批视频的标注到货后,可用数据将翻倍到两千条以上;
+  当前方案为了适应八百多条的样本量做了不少压缩,数据量上来后可以放开模型容量,这是预期收益最大的一项。
+  第二,把本周新增的形象保真信号折叠进专家模型集合内部重新训练,这项已经写好但受机器环境影响没有跑完。
+  第三,判官增加第三遍取平均,可进一步降低随机波动,代价是接口费用增加一半。
+  第四,针对基础款带道具与通用两类任务补充针对性信号,它们是目前成绩最低的两类。</p>
+
+</div>
+</body>
+</html>
