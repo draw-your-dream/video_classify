@@ -9,9 +9,9 @@ import run_pilot as RP
 
 ROOT=Path.home()/"tutu-video-eval"; D=ROOT/"data"
 OUTF=Path(sys.argv[1]); W=int(sys.argv[2]) if len(sys.argv)>2 else 16
-VID=D/"videos"; REFS=D/"frames0"; SKU=str(D/"sku_ref_v2/views")
+VID=D/"videos"; REFS=D/"frames0"; SKU=(str(D/"sku_ref_v2/views") if os.environ.get("F3_SKU") else None)
 REFS.mkdir(exist_ok=True)
-RP.MEDIA_RES="MEDIA_RESOLUTION_HIGH"; RP.THINK="high"
+RP.MEDIA_RES=os.environ.get("F3_MEDIA","MEDIA_RESOLUTION_LOW"); RP.THINK="high"
 key=os.environ["GOOGLE_API_KEY"]; model="gemini-3.6-flash"
 import csv
 rows=[r["filename"] for r in csv.DictReader(open(D/"tutu_task1_annotations_1233.csv",encoding="utf-8-sig"))]
