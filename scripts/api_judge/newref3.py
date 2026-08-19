@@ -13,14 +13,17 @@ import os
 MODEL=os.environ.get("NR3_MODEL","google/siglip2-so400m-patch16-512"); NF=32; BATCH=int(os.environ.get("NR3_BATCH","8"))
 TAG=os.environ.get("NR3_TAG","")
 proc=AutoImageProcessor.from_pretrained(MODEL)
-model=AutoModel.from_pretrained(MODEL, torch_dtype=torch.float16).vision_model.to("cuda").eval()
+_m=AutoModel.from_pretrained(MODEL, torch_dtype=torch.float16)
+model=(_m.vision_model if hasattr(_m,"vision_model") else _m).to("cuda").eval()
 
 @torch.no_grad()
 def embed(pils):
     out=[]
     for i in range(0,len(pils),BATCH):
         x=proc(images=pils[i:i+BATCH], return_tensors="pt")["pixel_values"].half().to("cuda")
-        out.append(model(pixel_values=x).pooler_output.float().cpu().numpy())
+        o=model(pixel_values=x)
+        f=o.pooler_output if getattr(o,"pooler_output",None) is not None else o.last_hidden_state.mean(1)
+        out.append(f.float().cpu().numpy())
     E=np.concatenate(out); return E/np.linalg.norm(E,axis=1,keepdims=True)
 
 views=sorted((D/"sku_ref_v2/views").glob("*.jpg"))
