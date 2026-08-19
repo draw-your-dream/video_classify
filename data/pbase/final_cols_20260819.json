@@ -1,0 +1,78 @@
+{
+ "name": "R4-final-20260819",
+ "metric": "br@80",
+ "caliber": "隔离口径(图片探针按源图分组五折,给某视频打分的探针不含其源图)",
+ "columns": {
+  "expert_stack": [
+   "r1b",
+   "r1c"
+  ],
+  "flash": [
+   "flash_avg(两遍秩均值)",
+   "flash_trkpct(同任务类别内分位)"
+  ],
+  "imgprobe": [
+   "p_lr(LR头,隔离版)"
+  ],
+  "refprobe": [
+   "max_cos"
+  ],
+  "newref": [
+   "clip_mean",
+   "clip_min",
+   "clip_last",
+   "clip_drop",
+   "clip_std",
+   "sig_mean",
+   "sig_min",
+   "sig_first",
+   "sig_last",
+   "sig_drop",
+   "sig_std"
+  ],
+  "newref3_src9_dinov2": [
+   "adj_min",
+   "src_drop",
+   "src_end_drop",
+   "src_first",
+   "src_lowfrac",
+   "src_max",
+   "src_mean",
+   "src_min",
+   "src_slope"
+  ],
+  "newref4_patch4_dinov2": [
+   "al_slope",
+   "al_p10",
+   "al_last",
+   "al10_min"
+  ],
+  "meta_onehot": [
+   "TR×4(去 base-props)",
+   "SKU×8"
+  ]
+ },
+ "n_columns": 42,
+ "meta": "StandardScaler + LogisticRegression(C=100, 无类别加权),按 8 个 CV 种子装袋取秩平均",
+ "readouts": {
+  "dev867_10fold_8seed": {
+   "single": 0.4736,
+   "bagged": 0.4974,
+   "auc": 0.6938
+  },
+  "dev867_10fold_conf": {
+   "single": 0.4747,
+   "bagged": 0.4906
+  },
+  "full1233_20fold_8seed": {
+   "single": 0.4793,
+   "bagged": 0.4862,
+   "auc": 0.6842
+  },
+  "full1233_20fold_conf": {
+   "single": 0.4743,
+   "bagged": 0.4731
+  }
+ },
+ "note": "常规口径(含原泄漏探针)下 br@80 维持 0.5417,src9/patch4 只涨 AUC 到 0.7278"
+}
