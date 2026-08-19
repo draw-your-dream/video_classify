@@ -8,8 +8,9 @@
    "r1c"
   ],
   "flash": [
-   "flash_avg(两遍秩均值)",
-   "flash_trkpct(同任务类别内分位)"
+   "flash_avg(第1+2遍秩均值)",
+   "flash_trkpct(同任务类别内分位)",
+   "flash_v8(第三票,独立一列)"
   ],
   "imgprobe": [
    "p_lr(LR头,隔离版)"
@@ -52,7 +53,7 @@
    "SKU×8"
   ]
  },
- "n_columns": 42,
+ "n_columns": 43,
  "meta": "StandardScaler + LogisticRegression(C=100, 无类别加权),按 8 个 CV 种子装袋取秩平均",
  "readouts": {
   "dev867_10fold_8seed": {
@@ -72,7 +73,15 @@
   "full1233_20fold_conf": {
    "single": 0.4743,
    "bagged": 0.4731
+  },
+  "full1233_20fold_8seed_with_3rd_vote": {
+   "single": 0.4846,
+   "bagged": 0.4982
+  },
+  "full1233_20fold_conf_with_3rd_vote": {
+   "single": 0.4794,
+   "bagged": 0.4826
   }
  },
- "note": "常规口径(含原泄漏探针)下 br@80 维持 0.5417,src9/patch4 只涨 AUC 到 0.7278"
+ "note": "常规口径(含原泄漏探针)下 br@80 维持 0.5417,src9/patch4 只涨 AUC 到 0.7278 第三票(v8)作独立列在部署口径 +0.5/+1.2pt,dev867 口径持平;判官配置见 RUNBOOK。"
 }

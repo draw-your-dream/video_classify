@@ -24,14 +24,31 @@ aws s3 sync s3://sowii-wan-post-train/annotation/tutu-annotation-task1-0803/vide
 
 | 路 | 脚本 | 产出 | 资源 |
 |---|---|---|---|
-| Gemini 判官 ×2 | `scripts/api_judge/run_pilot.py --backend gemini` | `flash_full_1233.json`、`flash_run2_1233.json` | 外部接口,16 并发,约 30 分钟/1000 条 |
+| Gemini 判官 ×3 | `scripts/api_judge/run_flash_v8.py`(配置见下表) | `flash_full_1233.json`、`flash_run2_1233.json`、`flash_v8_raw.jsonl` | 外部接口,16 并发,30–90 分钟/1000 条(受限流波动) |
 | 视觉特征栈 + 15 专家 | `scripts/api_judge/r1b_full_retrain.py` | `r1_oof.npz`(r1b/r1c) | 1 张卡,约 60 分钟/1000 条 |
 | 官方形象图对照 | `scripts/api_judge/newref_feats.py` | `newref_feats.csv`(13 列) | 同卡,约 8 分钟 |
 | 源图检测模型 | `scripts/api_judge/img_probe.py` | `imgprobe_1233.csv` | 同卡,约 3 分钟 |
 | 元信息 | 直接从文件名解析 | 款式 8 + 任务类别 4 | — |
 
-判官的提示词见 `scripts/api_judge/rubric_v2_withsku.txt`;调用为原生视频输入 fps=5,
-附本款官方形象图 2 张 + 本视频首帧参考图,结构化 JSON 输出,同一条跑两遍取秩均值。
+### 判官的精确配置(必须逐项对齐,否则特征不可比)
+
+| 项 | 值 |
+|---|---|
+| 模型 | `gemini-3.6-flash`(原生视频输入,`videoMetadata.fps=5`) |
+| 媒体分辨率 | **`MEDIA_RESOLUTION_LOW`**(视频约 1700–1775 tokens;HIGH 会到 6725 且成绩更差) |
+| 提示词 | `scripts/api_judge/rubric_v2_withsku.txt`(TEXT 约 576–580 tokens) |
+| 官方形象图 | **3 张**,来自 `data/sku_ref_v2/views/`,代码取 index 0/1/末(缺它成绩掉约 8pt) |
+| 参考图 | 有真源图用真源图(`<image_sample_id>.png`,见下),缺则视频首帧 |
+| 思考档位 | `thinkingLevel=high` |
+| 跑几遍 | **三遍**:两遍取秩均值作一列 + 第三遍单独作一列(第三票 +1.2pt,见 E-F3-3) |
+
+真源图位置:`s3://sowii-qwen-post-train/datasets/<批次>/targets/<image_sample_id>.png`,
+批次名取自 `data/api_judge_video_image_map.csv` 的 `image_dataset` 列;1233 条中 786 条有真源图。
+
+**上线前自检(硬性)**:跑一条,核对 `usage.promptTokensDetails` 三个模态是否落在
+`VIDEO 1700–1775 / IMAGE 1044–1065 / TEXT 574–580`(总计 3325–3412)。
+只核对 `ref` 字段与 fps **不足以**判定同配置 —— 2026-08-19 因此白跑五次、约 9 美元。
+基准原始输出留档:`data/out_holdout_full.jsonl`(第1遍 1083 条)、`data/out_run2_s0..s3.jsonl`(第2遍)。
 
 ## 2. 融合与评估
 
