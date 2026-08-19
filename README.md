@@ -1,88 +1,76 @@
-# video_classify — 蘑菇TUTU 视频 badcase 判别
+# video_classify — 蘑菇TUTU 视频 badcase 判别器
 
-AI 生成毛毡蘑菇 IP 短视频(~5s)的质检漏斗:**bad 近零漏检前提下,尽量多地自动放行 good**。
-唯一指标:**prod500 上 27/27 bad 全召回时的 good 自动放行率**。线上部署基线 = 0%。
+AI 图生视频产出的卡通 IP「蘑菇TUTU」~5 秒短视频,发布前要过人工质检。
+本仓库做的是质检漏斗里的自动判别器:给每条视频打一个"可能有问题"的分数,
+分数低的自动放行,分数高的送人工复核。
 
-## 当前成果(2026-07-29)
+**当前对象:2.0 数据集**(1233 条,bad 835 / normal 234 / good 164,8 款形象、5 类生成任务)。
+**指标 br@80**:固定自动放行 80% 合格视频(good+normal),报被拦下的 bad 比例。
 
-| 方案 | 全召回下 good 放行 |
+| | br@80 |
 |---|---|
-| 线上现状 | 0% |
-| 语料训练模型直接迁移(最优) | ≤5% |
-| dim_fidelity 单轴(保守底线) | 13.3% |
-| **dim_fidelity ⊕ c_first_last 双轴 OR 门** | **26.4%**(t=0.468,LOO 漏 1/27=8fdc8f08,bootstrap CI 下界 26.4%) |
+| 原有线上系统直接套用 | 0.261 |
+| 五路信号融合(本仓库) | **0.5417** |
+| 同上,图片探针严格隔离的保守估计 | **约 0.45** |
 
-- `dim_fidelity`:线上 VLM rubric 的还原度劣化分(越高越差;感知层可用,其决策层 p_bad 池内 AUC 0.526 不可用)。
-- `c_first_last`:GroundingDINO 裁角色 → 首末帧 SigLIP2 嵌入余弦(自参照设计,跨域不携带绝对尺度)。
-- 门构造:两轴各自域内分位,OR 取最大;阈值压在最难 bad 的分位上(全召回由构造保证,泛化看 LOO)。
+两个口径的差别只在源图探针的训练/评估隔离方式,见 [RUNBOOK.md](RUNBOOK.md) 第 3 节。
+复现、数据位置、提取命令、部署耗时全部在 **[RUNBOOK.md](RUNBOOK.md)**。
 
-## 复现 26.4%(不需要 S3、不需要 GPU)
+## 方法
+
+五路信号并行计算,合并成 28 列,由逻辑回归给出最终分数(按 8 个交叉验证种子装袋取秩平均):
+
+| 信号 | 做什么 | 单路 br@80 |
+|---|---|---|
+| Gemini 3.6 Flash 判官 ×2 遍 | 原生视频输入 fps=5 + 源图 + 官方形象图,结构化输出五维度缺陷 | 0.344 |
+| 视觉特征栈 + 15 专家模型 | 检测/光流/姿态/视频编码器共 303 项测量 | 0.353 |
+| 官方形象图对照(newref) | 16 帧对 43 张官方视角图的相似度曲线统计 | 0.322 |
+| 源图检测模型 | 只看第一帧,由 4553 张已质检图片训练 | 0.411(隔离口径 0.249) |
+| 款式与任务类别 | 8 款 + 5 类的编码,校正类间难度差 | — |
+
+评估纪律:按 `source_sha` 分组切分与交叉验证(同一源图的视频不跨折),
+选型只在 dev 867,读数一律 8 个种子,选型种子与复核种子分离。
+锁箱 366 只开过一枪(上一版系统 0.508),不可复开。
+
+## 快速开始
 
 ```bash
 git clone https://github.com/pkucaoyuan/video_classify && cd video_classify
-pip install pandas numpy                  # 仅有的依赖
-python scripts/eval_or_gate.py            # 基线 26.4%(t=0.468, LOO 漏 1/27)
-python scripts/eval_or_gate.py --table    # 逐 bad 分位表(看门的盲区)
+pip install numpy scipy scikit-learn lightgbm
+python scripts/api_judge/combiner_dev.py      # 融合消融台:任意特征块组合的 br@80/AUC
+python scripts/api_judge/final_eval.py        # 终配 8 种子终读
+python scripts/api_judge/weekly_clean_eval.py # 隔离口径重算
 ```
 
-复现所需的两张数据表已在仓库内:`data/prod500/prod500.csv`(GT 与线上评分,已脱敏)
-和 `data/prod500/prod_crop.csv`(裁剪特征含 c_first_last)。已验证全新 clone 直接出 26.4%。
+特征表与视频走 S3(位置见 RUNBOOK 第 0 节),仓库内只放小工件:
+终配列名 `data/pbase/prune_p2_cols.json`、隔离口径探针分数、两套口径的装袋 OOF。
 
-**溯源完整性(2026-07-29 验证):**c_first_last 由 `scripts/crop_feat_original.py` 生成
-(GroundingDINO 三连 prompt 检测 → 方形裁剪 1.25 倍 → SigLIP2-so400m-384 pooler 嵌入 → 首末帧余弦)。
-在 H100 原机原环境复跑 500 条,与仓库内 `prod_crop.csv` 逐条完全一致(pearson 1.0000,最大差 0.0000)。
-整条链 视频(S3)→ 提取脚本 → 特征表 → 评估门 → 26.4% 每一环均可再生。
-注意:换用 siglip2-base-224/投影特征/矩形裁剪的变体实现与该列相关仅 0.28——
-**此特征对实现细节敏感,复现必须用 crop_feat_original.py 的确切配置。**
+## 已判死的方向(带数字)
 
-## 大文件走 S3(视频/模型/语料)
+完整清单在 [docs/FACTOR_PREREG.md](docs/FACTOR_PREREG.md),逐条预注册、先登记后评估。要点:
 
-桶 `s3://sowii-reward-model/tutu/video_reward/`(us-east-1),访问 key 不入库、向维护者索取,配置:
+- **VLM 语义比对复刻不了"还原度"**:判图 v1(AUC 0.4985)、意图条件化 v2(0.5175)、
+  末帧对照源图(0.4889)三连死;嵌入统计(newref)才有效——该轴是分布性异常而非可言说的语义偏差。
+- **微调路线 7 次墙**:7B/32B × 新旧语料 × 二分类/专项,AUC 全在 0.47–0.60。
+- **专家栈折叠新特征(r1b′)**:单路更强但进融合层反而降(隔离口径 0.3986/0.4429 对 0.4566),证伪。
+- **参照相似族 9 次死**;`refprobe` 的 p_lr/p_gbm 与 `imgprobe` 逐位相同,非新信息。
+- **高维块直接摊进融合层一律掉分**:867 样本下每加一列都在 br@80 上掏钱,
+  信号必须折成标量或折进底层模型(折叠须嵌套:训练行用内折样本外预测,否则融合层会过度信任该列)。
 
-```bash
-aws configure --profile reward-model-s3   # 填 access key / secret
-aws s3 ls s3://sowii-reward-model/tutu/video_reward/ --profile reward-model-s3
-```
+## 历史阶段(prod500,2026-07 及以前)
 
-| S3 路径 | 内容 | 用途 |
-|---|---|---|
-| `data/prod500/videos.tar` | 500 条视频(386MB) | 跑 `extract_f1f5.py` 全流程 |
-| `hf_cache/` | grounding-dino-base + siglip2-base 权重镜像 | 免翻墙拉底模 |
-| `data/corpus/` | 语料 4473 标签与划分 | 机制验证 |
-| `results/` `models/` | 每轮实验产出 / 训练权重 | 只增不改 |
-
-全流程复现(需 GPU,~12GB 显存):
-
-```bash
-aws s3 cp s3://sowii-reward-model/tutu/video_reward/data/prod500/videos.tar . --profile reward-model-s3
-tar -xf videos.tar -C data/prod500/       # 解出 data/prod500/videos/*.mp4
-pip install torch transformers opencv-python-headless pillow
-python scripts/extract_f1f5.py            # 产出 factors_f1f5.jsonl(底模默认从 HF 拉,或先从 S3 hf_cache/ 同步到 .hf_cache)
-python scripts/eval_or_gate.py --sweep    # 新因子并门评估
-```
-
-语料机制验证子集(464 还原度 bad + 455 good)清单在 `data/prod500/mech_subset.tsv`,
-视频在语料桶 `s3://trash-in-picaa/Datasets/tutu-video-eval/`(需该桶权限),`scripts/dl_mech_subset.sh` 下载。
-
-## 为什么不用语料 4473 训练(一句话版)
-
-语料(45% bad,82% 运动缺陷,近景棚拍)与产线(5.4% bad,还原度/物理缺陷,生活场景)是不相交的两个域:
-域分类器 AUC 0.9997,同协议大样本对照里语料内 0.83 的还原度信号跨域跌到 0.512。
-**测量机制可迁移,权重与阈值不可迁移**。语料唯一正当用法 = 机制标定台(详见 `docs/RETRAIN.md` 审计与 `docs/FAILURE_CATALOG.md`)。
-
-## 进行中
-
-- F1–F5 部件级/自参照因子(`scripts/extract_f1f5.py`,预注册于 `docs/FACTOR_PREREG.md`,先登记后评估):
-  菌盖漂移 / 首帧锚定 min-over-t / 脸部漂移 / 镜头补偿尺寸趋势 / 非角色残余运动。
-- F6 定向 VLM 问题轴 + F7 IP 模板符合度(Qwen3-VL-30B,H100)。
-- 机制验证子集:语料 skus 域还原度 bad 464 + good 455(`data/prod500/mech_subset.tsv`)。
+上一阶段的对象是 500 条产线抽检、指标是"27/27 bad 全召回时的 good 放行率",
+最好成绩 26.4%(双轴 OR 门),复现入口 `scripts/eval_or_gate.py`,数据表在 `data/prod500/`。
+该阶段的结论(训练语料与产线是不相交视觉域,域分类器 AUC 0.9997;测量机制可迁移、
+权重与阈值不可迁移)仍然成立,见 `docs/RETRAIN.md` 与 `docs/FAILURE_CATALOG.md`。
+2.0 数据集换代后,老系统直接套用只剩 0.261,重建是必要的。
 
 ## 目录
 
 ```
-docs/     失败模式精读目录 / 因子预注册 / 前人体系审计 / 迭代日志 / S3 公约
-scripts/  评估门 / 因子提取 / S3 同步 / 子集下载
-data/prod500/  GT 表(脱敏,无内部 URL)+ 裁剪特征表 + 机制子集清单
+RUNBOOK.md        复现与部署手册:数据位置、提取命令与耗时、评估、部署形态
+scripts/api_judge/ 当前阶段全流程:五路信号提取、融合台、终评、隔离口径重算
+scripts/          历史阶段脚本(prod500 时代的因子提取与评估门)
+docs/             因子预注册(逐条判决)/ 失败模式精读 / 前人体系审计 / 迭代日志 / S3 公约
+data/pbase/       当前阶段小工件;data/prod500/ 历史阶段数据表
 ```
-
-大文件(500 条视频、模型权重、语料)不入 git,走 `s3://sowii-reward-model/tutu/video_reward/`(公约见 `docs/S3_LAYOUT.md`)。
