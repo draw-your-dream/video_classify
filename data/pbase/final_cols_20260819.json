@@ -1,5 +1,5 @@
 {
- "name": "R4-final-20260819",
+ "name": "R8-final-20260821",
  "metric": "br@80",
  "caliber": "隔离口径(图片探针按源图分组五折,给某视频打分的探针不含其源图)",
  "columns": {
@@ -16,7 +16,8 @@
    "p_lr(LR头,隔离版)"
   ],
   "refprobe": [
-   "max_cos"
+   "raw_first(OWLv2框裸裁剪→DINOv2-large对官方视角max,首帧)",
+   "v_local(局部放大35%+512上采样+SAM掩膜涂白→同上,首帧)"
   ],
   "newref": [
    "clip_mean",
@@ -53,7 +54,7 @@
    "SKU×8"
   ]
  },
- "n_columns": 43,
+ "n_columns": 44,
  "meta": "StandardScaler + LogisticRegression(C=100, 无类别加权),按 8 个 CV 种子装袋取秩平均",
  "readouts": {
   "dev867_10fold_8seed": {
@@ -83,5 +84,31 @@
    "bagged": 0.4826
   }
  },
- "note": "常规口径(含原泄漏探针)下 br@80 维持 0.5417,src9/patch4 只涨 AUC 到 0.7278 第三票(v8)作独立列在部署口径 +0.5/+1.2pt,dev867 口径持平;判官配置见 RUNBOOK。"
+ "note": "R8:整帧 max_cos 换成定位后的形象还原度。归因对照:整帧换 DINOv2-large 无用(0.2671/0.5737),框内特写才跳到 0.4251/0.6508 —— 增益来自定位不是编码器。装袋口径抽样波动 ±1.5pt,以单跑均值与 AUC 为准;此前 8 种子报出的 0.4982 偏乐观。常规(含泄漏探针)口径 0.5417 尚未按本次替换重算。",
+ "readouts_R8": {
+  "full1233_20fold_16seed": {
+   "single": 0.5002,
+   "single_std": 0.0107,
+   "bagged": 0.5138,
+   "auc": 0.6975,
+   "SEL": 0.5034,
+   "CONF": 0.509
+  },
+  "dev867_10fold_16seed": {
+   "single": 0.4933,
+   "single_std": 0.0165,
+   "bagged": 0.5094,
+   "auc": 0.7009,
+   "SEL": 0.5014,
+   "CONF": 0.5037
+  },
+  "baseline_43col_16seed": {
+   "full_single": 0.4832,
+   "full_bagged": 0.4898,
+   "full_auc": 0.6845,
+   "dev_single": 0.4654,
+   "dev_bagged": 0.4838,
+   "dev_auc": 0.6908
+  }
+ }
 }

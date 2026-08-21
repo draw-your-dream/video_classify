@@ -166,3 +166,87 @@ def ref_embeddings(view_dir, skus=None):
         if skus and sku not in skus: continue
         out.setdefault(sku, []).append(ref_crop(Image.open(p)))
     return {k: demb(v) for k, v in out.items()}
+
+
+# ── 以下三项为补齐移植:原 ip_check 的另一半候选来源与局部放大路径 ──
+from transformers import pipeline as _hf_pipeline
+PPS = 16; TOPK_SEG = 20
+
+def _nms(boxes, scores, iou_thr):
+    """torchvision.ops.nms 的等价实现(本机无 torchvision)。boxes: (N,4) xyxy tensor。"""
+    if boxes.numel() == 0:
+        return torch.empty((0,), dtype=torch.int64, device=boxes.device)
+    x1, y1, x2, y2 = boxes[:, 0], boxes[:, 1], boxes[:, 2], boxes[:, 3]
+    areas = (x2-x1).clamp(min=0)*(y2-y1).clamp(min=0)
+    order = scores.argsort(descending=True)
+    keep = []
+    while order.numel() > 0:
+        i = order[0]; keep.append(int(i))
+        if order.numel() == 1: break
+        rest = order[1:]
+        xx1 = torch.max(x1[i], x1[rest]); yy1 = torch.max(y1[i], y1[rest])
+        xx2 = torch.min(x2[i], x2[rest]); yy2 = torch.min(y2[i], y2[rest])
+        inter = (xx2-xx1).clamp(min=0)*(yy2-yy1).clamp(min=0)
+        iou = inter/(areas[i]+areas[rest]-inter+1e-9)
+        order = rest[iou <= iou_thr]
+    return torch.tensor(keep, dtype=torch.int64, device=boxes.device)
+
+def _batched_nms(boxes, scores, idxs, iou_threshold):
+    """torchvision.ops.boxes.batched_nms 的等价实现:按 idxs 分组做 NMS(坐标偏移法)。"""
+    if boxes.numel() == 0:
+        return torch.empty((0,), dtype=torch.int64, device=boxes.device)
+    off = idxs.to(boxes)*(boxes.max()+1)
+    return _nms(boxes+off[:, None], scores, iou_threshold)
+
+def load_seg():
+    if "seg" not in _M:
+        # 本机无 torchvision,transformers 的 mask-generation 后处理里 batched_nms 未定义 → 注入等价实现
+        import transformers.models.sam.image_processing_sam as _ips
+        if not hasattr(_ips, "batched_nms") or _ips.batched_nms is None:
+            _ips.batched_nms = _batched_nms
+        if not hasattr(_ips, "nms") or getattr(_ips, "nms", None) is None:
+            _ips.nms = _nms
+        sam = _snap("facebook/sam-vit-base")
+        _M["seg"] = _hf_pipeline("mask-generation", model=sam, device=0 if DEVICE == "cuda" else -1)
+
+def seg_cands(im):
+    """原 _seg_cands:SAM 自动掩膜生成 → 面积过滤 → 掩膜裁剪(原样,含 _small 缩到 768)。"""
+    load_seg()
+    W, H = im.size
+    out = _M["seg"](im, points_per_side=PPS, pred_iou_thresh=0.85,
+                    stability_score_thresh=0.9, points_per_batch=64)
+    ms = [np.asarray(m, bool) for m in out["masks"]]
+    ms = [m for m in ms if 0.004 <= m.sum()/(W*H) <= 0.6]
+    ms.sort(key=lambda m: -m.sum())
+    return [mcrop(im, m) for m in ms[:TOPK_SEG]]
+
+def owl_local_cands(full):
+    """原 _owl_local_cands:OWLv2 框 → 外扩 35% → 局部放大到 512(≤4×)→ SAM box → 掩膜裁剪。"""
+    W, H = full.size; crops = []
+    for b in owl_boxes(full):
+        x0, y0, x1, y1 = b; bw = x1-x0; bh = y1-y0
+        if bw <= 2 or bh <= 2: continue
+        ex = (max(0, x0-int(bw*0.35)), max(0, y0-int(bh*0.35)),
+              min(W, x1+int(bw*0.35)), min(H, y1+int(bh*0.35)))
+        loc = full.crop(ex); lw, lh = loc.size
+        sc = min(4.0, 512/max(lw, lh)); loc = loc.resize((max(1, int(lw*sc)), max(1, int(lh*sc))), Image.LANCZOS)
+        bl = ((x0-ex[0])*sc, (y0-ex[1])*sc, (x1-ex[0])*sc, (y1-ex[1])*sc)
+        try: crops.append(mcrop(loc, sam_box(loc, bl)))
+        except Exception: pass
+    return crops
+
+def ip_score(full, R, use_seg=True, use_local=True):
+    """原 ip_score:两路候选并集上对参考图取最大余弦。返回 (分数, 候选数)。"""
+    cand = []
+    if use_seg: cand += seg_cands(_small(full))
+    if use_local: cand += owl_local_cands(full)
+    if not cand: return None, 0
+    E = demb(cand)
+    return float((E@R.T).max(1).max()), len(cand)
+
+def square_pad(full, box, canvas=768):
+    """原 _square_pad:按框裁剪 → 白底方形居中 pad → resize 到 canvas。"""
+    crop = full.crop(box); cw, ch = crop.size; side = max(cw, ch)
+    sq = Image.new("RGB", (side, side), (255, 255, 255))
+    sq.paste(crop, ((side-cw)//2, (side-ch)//2))
+    return sq.resize((canvas, canvas), Image.LANCZOS)
